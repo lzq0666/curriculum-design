@@ -28,7 +28,7 @@ typedef struct customer
 // 定义商品结构体
 typedef struct goods
 {
-    int id;         // 商品ID（自增）
+    int id;         // 商品ID(自增)
     char name[100]; // 商品名称
     double price;   // 单价
     int state;      // 0:正常 1:其他 2:缺货 3:过期
@@ -37,13 +37,13 @@ typedef struct goods
     int sale_count; // 销售数量
 } goods;
 
-// 优惠方案结构体,第一层记录条件，第二层记录优惠金额
+// 优惠方案结构体,第一层记录条件,第二层记录优惠金额
 typedef struct discount_scheme
 {
     double full_reduction[2][101]; // 满减
     double VIP_discount[2][101];   // 会员折扣
     int full_gift[2][101];         // 满赠
-    double point_discount;         // 积分折扣（每百分）
+    double point_discount;         // 积分折扣(每百分)
 } discount_scheme;
 
 // 定义用户链表
@@ -132,7 +132,7 @@ status InitList_goods(LinkList_goods &L)
     }
 }
 
-// printCentered函数，实现文本居中输出
+// printCentered函数,实现文本居中输出
 void printCentered(const char *format, int width)
 {
     // 计算填充空格并居中输出文本
@@ -162,11 +162,11 @@ void printHeader(const char *title)
     printf("\n");
 }
 
-// 用户注册：添加到链表尾部并分配ID
+// 用户注册 : 添加到链表尾部并分配ID
 status register_customer(LinkList_customer &L)
 {
     printHeader("用户注册");
-    // 遍历链表到末尾，创建新节点并输入信息
+    // 遍历链表到末尾,创建新节点并输入信息
     LNode_customer *p = L;
     while (p->next != NULL) // 找到尾节点
     {
@@ -179,15 +179,15 @@ status register_customer(LinkList_customer &L)
         exit(EXIT_FAILURE);
     }
     s->customer.id = p->customer.id + 1;
-    printf("请输入用户名：");
+    printf("请输入用户名 : ");
     scanf("%s", s->customer.name);
     char c1[100], c2[100];
     while (1)
     {
-        printf("请输入密码：");
+        printf("请输入密码 : ");
         HiddenInput(c1);
         printf("\n");
-        printf("请再次输入密码：");
+        printf("请再次输入密码 : ");
         HiddenInput(c2);
         printf("\n");
         printf("密码输入完成\n");
@@ -206,7 +206,7 @@ status register_customer(LinkList_customer &L)
     s->customer.VIP_level = 0;
     s->customer.VIP_point = 0;
     s->customer.consume_money = 0.0;
-    printf("恭喜 %s 用户注册成功，正在返回上层界面\n", s->customer.name);
+    printf("恭喜 %s 用户注册成功,正在返回上层界面\n", s->customer.name);
     return OK;
 }
 
@@ -216,11 +216,11 @@ status admin_login()
     printHeader("管理员登录");
     char name[30];
     char password[20];
-    printf("请输入管理员账号：");
+    printf("请输入管理员账号 : ");
     scanf("%s", name);
     if (strcmp(name, "admin") == 0)
     {
-        printf("请输入管理员密码：");
+        printf("请输入管理员密码 : ");
         HiddenInput(password);
         if (strcmp(password, "0012345") == 0) // 输入账号密码并与硬编码值比较
         {
@@ -248,14 +248,14 @@ status customer_login(LinkList_customer &L, customer **customer)
     printHeader("用户登录");
     char name[100];
     char password[256];
-    printf("请输入用户名：");
+    printf("请输入用户名 : ");
     scanf("%s", name);
     LNode_customer *p = L->next;
     while (p != NULL)
     {
-        if (strcmp(p->customer.name, name) == 0) // 输入用户名密码，遍历链表验证
+        if (strcmp(p->customer.name, name) == 0) // 输入用户名密码,遍历链表验证
         {
-            printf("请输入密码：");
+            printf("请输入密码 : ");
             HiddenInput(password);
             if (strcmp(p->customer.password, password) == 0)
             {
@@ -282,7 +282,7 @@ status ListTraverse_customer(LinkList_customer L)
 {
     LNode_customer *p = L->next;
 
-    // 打印表头，遍历节点输出详细信息
+    // 打印表头,遍历节点输出详细信息
     for (int i = 0; i < 124; i++)
         printf("=");
     printf("\n");
@@ -399,7 +399,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
 
     while (1)
     {
-        printf("请输入操作序号：\n");
+        printf("请输入操作序号 : \n");
         printf("1.加入商品\n");
         printf("2.修改商品信息\n");
         printf("3.删除商品\n");
@@ -444,14 +444,14 @@ status calculate_sale_money(LinkList_goods &L)
     while (p != NULL)
     {
         printf("%-46s", p->goods.name);
-        printf("销售量：%d\n", p->goods.sale_count);
+        printf("销售量 : %d\n", p->goods.sale_count);
         s += p->goods.sale_count * p->goods.price;
         p = p->next;
     }
-    printf("优惠总价格：%.2lf\n", money);
+    printf("优惠总价格 : %.2lf\n", money);
     for (int i = 0; i < 124; i++)
         printf("=");
-    printf("总收入金额：%.2lf\n", s - money);
+    printf("总收入金额 : %.2lf\n", s - money);
     system("pause");
     return OK;
 }
@@ -567,20 +567,20 @@ status add_goods(LinkList_goods &L)
         return ERROR;
     }
     s->goods.id = p->goods.id + 1;
-    printf("请输入商品名：");
+    printf("请输入商品名 : ");
     scanf("%s", s->goods.name);
-    printf("请输入商品价格：");
+    printf("请输入商品价格 : ");
     scanf("%lf", &s->goods.price);
-    printf("请输入商品状态(0:正常 1:其他 2:缺货 3:过期)：");
+    printf("请输入商品状态(0:正常 1:其他 2:缺货 3:过期) : ");
     scanf("%d", &s->goods.state);
-    printf("请输入商品库存：");
+    printf("请输入商品库存 : ");
     scanf("%d", &s->goods.stock);
-    printf("请输入商品类型 (水果 ,蔬菜 ,肉类 ,海鲜 ,零食 ,饮料 ,文具 ,其他)：");
+    printf("请输入商品类型 (水果 ,蔬菜 ,肉类 ,海鲜 ,零食 ,饮料 ,文具 ,其他) : ");
     scanf("%s", s->goods.type);
     s->next = NULL;
     p->next = s;
     s->goods.sale_count = 0;
-    printf("商品信息：");
+    printf("商品信息 : ");
     printf("%d. %s %lf %d %d %s\n", s->goods.id, s->goods.name, s->goods.price, s->goods.state, s->goods.stock, s->goods.type);
     printf("商品添加成功,返回管理界面\n");
     system("pause");
@@ -591,7 +591,7 @@ status add_goods(LinkList_goods &L)
 status modify_goods(LinkList_goods &L)
 {
     int id;
-    printf("输入商品编号：");
+    printf("输入商品编号 : ");
     scanf("%d", &id);
     LinkList_goods p = L->next;
     while (p != NULL)
@@ -607,24 +607,24 @@ status modify_goods(LinkList_goods &L)
     }
     goods good;
     good.id = p->goods.id;
-    printf("请输入商品名：");
+    printf("请输入商品名 : ");
     scanf("%s", good.name);
-    printf("请输入商品价格：");
+    printf("请输入商品价格 : ");
     scanf("%lf", &good.price);
-    printf("请输入商品状态(0:正常 1:其他 2:缺货 3:过期)：");
+    printf("请输入商品状态(0:正常 1:其他 2:缺货 3:过期) : ");
     scanf("%d", &good.state);
-    printf("请输入商品库存：");
+    printf("请输入商品库存 : ");
     scanf("%d", &good.stock);
-    printf("请输入商品类型 (水果 ，蔬菜 ，肉类 ，海鲜 ，零食 ，饮料 ，文具 ，其他)：");
+    printf("请输入商品类型 (水果 ,蔬菜 ,肉类 ,海鲜 ,零食 ,饮料 ,文具 ,其他) : ");
     scanf("%s", good.type);
-    printf("是否重置销售数量？(0:否 1:是)：");
+    printf("是否重置销售数量？(0:否 1:是) : ");
     int c;
     scanf("%d", &c);
     if (c == 1)
         good.sale_count = 0;
     else
         good.sale_count = p->goods.sale_count;
-    printf("商品信息：");
+    printf("商品信息 : ");
     printf("%d. %s %lf %d %d %s\n", good.id, good.name, good.price, good.state, good.stock, good.type);
     p->goods = good;
     printf("商品修改成功,返回管理界面\n");
@@ -636,7 +636,7 @@ status modify_goods(LinkList_goods &L)
 status delete_goods(LinkList_goods &L)
 {
     int id;
-    printf("输入商品编号：");
+    printf("输入商品编号 : ");
     scanf("%d", &id);
     LinkList_goods p = L->next, s = (LNode_goods *)malloc(sizeof(LNode_goods));
     while (p != NULL)
@@ -652,7 +652,7 @@ status delete_goods(LinkList_goods &L)
         return ERROR;
     }
     printf("%d. %s %lf %d %d %s\n", p->goods.id, p->goods.name, p->goods.price, p->goods.state, p->goods.stock, p->goods.type);
-    printf("是否删除？(0:否 1:是)：");
+    printf("是否删除？(0:否 1:是) : ");
     int c;
     scanf("%d", &c);
     if (c == 1)
@@ -676,27 +676,28 @@ status delete_goods(LinkList_goods &L)
 // 商品加入购物车
 status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
 {
-    printf("请输入要添加的商品ID和数量(格式：ID 数量 输入-1 0结束)：\n");
     while (1)
     {
         int id, num;
         printf(">");
-        printf("请输入要添加的商品ID(-1结束)：\n");
+        printf("请输入要添加的商品ID(-1结束) : \n");
         scanf("%d", &id);
 
         if (id == -1)
         {
             break;
         }
-        printf(">");
-        printf("请输入数量：\n");
-        scanf("%d", &num);
 
-        if (num <= 0)
+        do
         {
-            printf("数量必须大于0\n");
-            continue;
-        }
+            printf(">");
+            printf("请输入数量 : \n");
+            scanf("%d", &num);
+            if (num <= 0)
+            {
+                printf("数量必须大于0,请重新输入\n");
+            }
+        } while (num <= 0);
 
         // 查找商品
         LinkList_goods p = L->next;
@@ -714,7 +715,7 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
         // 检查库存
         if (p->goods.stock < num)
         {
-            printf("商品 %s 库存不足，当前库存: %d\n", p->goods.name, p->goods.stock);
+            printf("商品 %s 库存不足,当前库存: %d\n", p->goods.name, p->goods.stock);
             continue;
         }
 
@@ -755,7 +756,161 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
     return OK;
 }
 
-// 结算（优惠取优）：计算总价，应用优惠，更新库存和用户数据，清空购物车
+// 修改购物车中商品数量
+status modify_cart_item(LinkList_customer_cart &L_customer_cart)
+{
+    printHeader("修改购物车商品数量");
+    // 显示购物车内容
+    printf("购物车 : \n");
+    LinkList_customer_cart p = L_customer_cart->next;
+    if (p != NULL)
+    {
+        printCentered("序号", 5);
+        printCentered("商品名", 40);
+        printCentered("数量", 5);
+        printCentered("价格", 15);
+        printf("\n");
+        while (p != NULL)
+        {
+            printf("%4d. ", p->goods.id);
+            printf("%-40s", p->goods.name);
+            printf("%-5d", p->number);
+            printf("%-15.2lf\n", p->goods.price);
+            p = p->next;
+        }
+        for (int i = 0; i < 124; i++)
+            printf("=");
+        printf("\n");
+    }
+    else
+    {
+        printf("购物车是空的\n");
+        for (int i = 0; i < 124; i++)
+            printf("=");
+        printf("\n");
+    }
+    // 如果购物车为空,提示并返回
+    if (L_customer_cart->next == NULL)
+    {
+        printf("购物车是空的\n");
+        system("pause");
+        return ERROR;
+    }
+
+    printf("请输入要修改的商品ID和新数量(输入-1 0结束) : \n");
+    while (1)
+    {
+        int id, num;
+        scanf("%d %d", &id, &num);
+        if (id == -1)
+            break;
+
+        LNode_customer_cart *cart = L_customer_cart->next;
+        while (cart != NULL && cart->goods.id != id)
+        {
+            cart = cart->next;
+        }
+
+        if (cart == NULL)
+        {
+            printf("购物车中没有ID为%d的商品\n", id);
+            continue;
+        }
+
+        if (num <= 0)
+        {
+            // 从购物车中删除
+            LNode_customer_cart *prev = L_customer_cart;
+            while (prev->next != cart)
+            {
+                prev = prev->next;
+            }
+            prev->next = cart->next;
+            free(cart);
+            printf("已从购物车中删除该商品\n");
+        }
+        else
+        {
+            cart->number = num;
+            printf("已更新商品数量\n");
+        }
+    }
+    system("pause");
+    return OK;
+}
+
+// 从购物车中删除商品
+status delete_cart_item(LinkList_customer_cart &L_customer_cart)
+{
+    printHeader("删除购物车商品");
+    // 显示购物车内容
+    printf("购物车 : \n");
+    LinkList_customer_cart p = L_customer_cart->next;
+    if (p != NULL)
+    {
+        printCentered("序号", 5);
+        printCentered("商品名", 40);
+        printCentered("数量", 5);
+        printCentered("价格", 15);
+        printf("\n");
+        while (p != NULL)
+        {
+            printf("%4d. ", p->goods.id);
+            printf("%-40s", p->goods.name);
+            printf("%-5d", p->number);
+            printf("%-15.2lf\n", p->goods.price);
+            p = p->next;
+        }
+        for (int i = 0; i < 124; i++)
+            printf("=");
+        printf("\n");
+    }
+    else
+    {
+        printf("购物车是空的\n");
+        for (int i = 0; i < 124; i++)
+            printf("=");
+        printf("\n");
+    }
+    // 如果购物车为空,提示并返回
+    if (L_customer_cart->next == NULL)
+    {
+        printf("购物车是空的\n");
+        system("pause");
+        return ERROR;
+    }
+
+    printf("请输入要删除的商品ID(输入-1结束) : \n");
+    while (1)
+    {
+        int id;
+        scanf("%d", &id);
+        if (id == -1)
+            break;
+
+        LNode_customer_cart *prev = L_customer_cart;
+        LNode_customer_cart *cart = L_customer_cart->next;
+        while (cart != NULL && cart->goods.id != id)
+        {
+            prev = cart;
+            cart = cart->next;
+        }
+
+        if (cart == NULL)
+        {
+            printf("购物车中没有ID为%d的商品\n", id);
+            continue;
+        }
+
+        prev->next = cart->next;
+        free(cart);
+        printf("已从购物车中删除该商品\n");
+    }
+    system("pause");
+    return OK;
+}
+
+// 结算(优惠取优) : 计算总价,应用优惠,更新库存和用户数据,清空购物车
 status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 {
     double s = 0.0;
@@ -771,7 +926,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     LNode_customer_cart *p = P->next;
     if (p == NULL) // 如果购物车为空
     {
-        printf("您还未选购商品，无需结账\n");
+        printf("您还未选购商品,无需结账\n");
         return ERROR;
     }
     if (p != NULL)
@@ -783,7 +938,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         printCentered("小计", 15);
         printf("\n");
     }
-    // 计算总金额，匹配满减/VIP折扣，处理积分，更新销售数据
+    // 计算总金额,匹配满减/VIP折扣,处理积分,更新销售数据
     int num = 1;
     while (p != NULL)
     {
@@ -799,7 +954,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     }
     /*
         // 正确操作链表
-        LNode_customer_cart *current = P->next; // P是头节点，从第一个有效节点开始
+        LNode_customer_cart *current = P->next; // P是头节点,从第一个有效节点开始
       LNode_customer_cart *prev = NULL;
         while (current != NULL)
         {
@@ -819,43 +974,85 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     for (int i = 0; i < 124; i++)
         printf("=");
     printf("\n");
-    printf("总价：%.2lf\n", s);
+    printf("总价 : %.2lf\n", s);
 
     /*
     检查优惠
     */
 
     double total_discount[3] = {0};
+    total_discount[0] = s;
     int i;
+
     // 满减
+    double max_reduction = 0;
+    int selected_level = -1;
+    // 找到适用的最大满减优惠
     for (i = 0; i < 100; i++)
     {
-        if ((s >= current_discount.full_reduction[0][i] && s < current_discount.full_reduction[0][i + 1]) || current_discount.full_reduction[0][i + 1] == -1)
+        if (current_discount.full_reduction[0][i] == -1)
             break;
+
+        if (s >= current_discount.full_reduction[0][i] &&
+            current_discount.full_reduction[1][i] > max_reduction)
+        {
+            max_reduction = current_discount.full_reduction[1][i];
+            selected_level = i;
+        }
     }
-    total_discount[0] = s - current_discount.full_reduction[1][i];
+    if (selected_level != -1)
+    {
+        total_discount[1] = s - max_reduction;
+        printf("满减可用满%.2lf减%.2lf\n", current_discount.full_reduction[0][selected_level], max_reduction);
+    }
+    else
+    {
+        total_discount[1] = s; // 没有满足任何满减条件
+    }
+
     // VIP
+    double min_vip_price = s; // 初始化为原价
+    int selected_vip_level = -1;
+
+    // 查找适用的最优VIP折扣
     for (i = 0; i < 100; i++)
     {
-        if ((c->VIP_level >= current_discount.VIP_discount[0][i] && c->VIP_level < current_discount.VIP_discount[0][i + 1]) || current_discount.VIP_discount[0][i + 1] == -1)
+        if (current_discount.VIP_discount[0][i] == -1.0)
             break;
+
+        if (c->VIP_level >= (int)current_discount.VIP_discount[0][i])
+        {
+            double current_price = s * current_discount.VIP_discount[1][i] / 100.0;
+            if (current_price < min_vip_price)
+            {
+                min_vip_price = current_price;
+                selected_vip_level = i;
+            }
+        }
     }
-    total_discount[1] = s * current_discount.VIP_discount[1][i] / 100.0;
+    total_discount[1] = min_vip_price;
+    if (selected_vip_level != -1)
+    {
+        printf("VIP%d可用%.1f折优惠\n",
+               c->VIP_level,
+               current_discount.VIP_discount[1][selected_vip_level] / 10.0);
+    }
+
     // 最终结算界面
     printf("系统已自动匹配最优折扣\n");
     if (total_discount[0] > total_discount[1])
     {
         total_discount[2] = total_discount[1];
-        printf("已使用会员打折优惠：%.2lf\n", total_discount[1]);
+        printf("已使用会员打折优惠 : %.2lf\n", total_discount[1]);
     }
     else
     {
         total_discount[2] = total_discount[0];
-        printf("已使用满减优惠：%.2lf\n", total_discount[0]);
+        printf("已使用满减优惠 : %.2lf\n", total_discount[0]);
     }
     printf("目前您有%d积分\n", c->VIP_point);
-    printf("目前每100积分可抵现：%.2lf\n", current_discount.point_discount);
-    printf("是否使用积分抵现？(0:否 1:是)：");
+    printf("目前每100积分可抵现 : %.2lf\n", current_discount.point_discount);
+    printf("是否使用积分抵现？(0:否 1:是) : ");
     int choice;
     scanf("%d", &choice);
     if (choice == 1)
@@ -866,10 +1063,10 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         printf("已使用%d积分抵现\n", point_chioce * 100);
         c->VIP_point = c->VIP_point - point_chioce * 100;
     }
-    printf("最终价格：%.2lf\n", total_discount[2]);
+    printf("最终价格 : %.2lf\n", total_discount[2]);
     srand(time(NULL));
     int a = rand() % 1000000;
-    printf("确认是否结账（验证码：%d）：", a);
+    printf("确认是否结账(验证码 : %d) : ", a);
     int pay_method;
     scanf("%d", &pay_method);
     if (pay_method == a)
@@ -886,7 +1083,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
                     {
                         l->goods.stock--;
                         l->goods.sale_count++;
-                        printf("恭喜获得赠品：%s\n", l->goods.name);
+                        printf("恭喜获得赠品 : %s\n", l->goods.name);
                         break;
                     }
                     else
@@ -946,466 +1143,6 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     }
 }
 
-// 修改优惠规则
-status modify_promotion_rule()
-{
-    int i;
-    for (i = 0; i < 124; i++)
-        printf("=");
-    printf("\n");
-    printCentered("修改优惠", 124);
-    printf("\n");
-    for (i = 0; i < 124; i++)
-        printf("=");
-    printf("\n");
-    printf("1.满减\n");
-    printf("2.VIP积分规则\n");
-    printf("3.会员等级打折\n");
-    printf("4.满赠\n");
-    printf("0.返回上层界面\n");
-    int c;
-    scanf("%d", &c);
-    switch (c)
-    {
-    case 1:
-    {
-        current_discount.full_reduction[0][0] = 0;
-        current_discount.full_reduction[1][0] = 0;
-        for (i = 0; i < 100; i++)
-        {
-            printf("请输入满减金额%d层金额(输入-1结束)：", i + 1);
-            scanf("%lf", &current_discount.full_reduction[0][i]);
-            if (current_discount.full_reduction[0][i] == -1)
-                break;
-            printf("\n");
-            printf("请输入满减金额%lf对应的优惠金额：", current_discount.full_reduction[0][i]);
-            scanf("%lf", &current_discount.full_reduction[1][i]);
-        }
-        printf("修改成功\n");
-        system("pause");
-        return OK;
-    }
-    case 3:
-    {
-        current_discount.VIP_discount[0][0] = 0;
-        current_discount.VIP_discount[1][0] = 0;
-        for (i = 0; i < 100; i++)
-        {
-            printf("请输入VIP等级%d层等级(输入-1结束)：", i + 1);
-            scanf("%lf", &current_discount.VIP_discount[0][i]);
-            if (current_discount.VIP_discount[0][i] == -1)
-                break;
-            printf("\n");
-            printf("请输入VIP等级%lf对应的折扣：", current_discount.VIP_discount[0][i]);
-            scanf("%lf", &current_discount.VIP_discount[1][i]);
-        }
-        printf("修改成功\n");
-        system("pause");
-        return OK;
-    }
-    case 4:
-    {
-        current_discount.full_gift[0][0] = 0;
-        current_discount.full_gift[1][0] = 0;
-        printf("请输入满赠金额%d层金额(输入-1结束)：", i + 1);
-        scanf("%lf", &current_discount.full_gift[0][i]);
-        if (current_discount.full_gift[0][i] == -1)
-            break;
-        printf("\n");
-        printf("请输入满赠金额%d对应的赠品ID：", current_discount.full_gift[0][i]);
-        scanf("%d", &current_discount.full_gift[1][i]);
-        printf("修改成功\n");
-        system("pause");
-        return OK;
-    }
-    case 2:
-    {
-        printf("请输入积分100积分抵的金额：");
-        scanf("%lf", &current_discount.point_discount);
-        printf("修改成功\n");
-        system("pause");
-        return OK;
-    }
-    case 0:
-        system("pause");
-        return OK;
-    default:
-        printf("输入错误,请重试\n");
-        system("pause");
-        return ERROR;
-    }
-}
-
-// 查看供货信息
-status view_supply_info(LinkList_goods &L)
-{
-    LNode_goods *p = L->next;
-    if (p == NULL) // 如果链表为空
-    {
-        printf("暂无商品记录\n");
-        printf("请加入商品\n");
-        return ERROR;
-    }
-    while (p != NULL)
-    {
-        if (p->goods.stock <= 10)
-        {
-            printf("%d. %s %lf\n", p->goods.id, p->goods.name, p->goods.price);
-        }
-        p = p->next;
-    }
-    printf("请输入供应商数量");
-    int n;
-    char name[256];
-    double price;
-    scanf("%d", &n);
-    printf("请输入供应商1的名称：");
-    scanf("%s", name);
-    printf("请输入供应商1的价格：");
-    scanf("%lf", &price);
-    for (int i = 2; i <= n; i++)
-    {
-        char nnn[256];
-
-        printf("请输入供应商%d的名称(以-1结束)：", i);
-        scanf("%s", nnn);
-        if (strcmp(nnn, "-1") == 0)
-            break;
-        printf("请输入供应商%d的价格：", i);
-        double p;
-        scanf("%lf", &p);
-        if (p < price)
-        {
-            strcpy(name, nnn);
-            price = p;
-        }
-    }
-    printf("供应商名称：%s 价格：%lf\n是最优的可以从其中进货\n", name, price);
-    printf("返回管理员清单");
-    system("pause");
-    return OK;
-}
-
-// 找回/改密码
-status find_password(LinkList_customer &L, int i)
-{
-    char name[100];
-    char c1[256], c2[256];
-    printf("请输入用户名：");
-    scanf("%s", name);
-    LNode_customer *p = L->next;
-    while (p != NULL)
-    {
-        if (strcmp(p->customer.name, name) == 0)
-            break;
-        p = p->next;
-    }
-    if (p == NULL)
-    {
-        printf("用户名不存在,请重试\n");
-        system("pause");
-        return ERROR;
-    }
-    if (i == 0)
-    {
-        printf("请输入原密码：");
-        HiddenInput(c1);
-        if (strcmp(p->customer.password, c1) == 0)
-            ;
-        else
-        {
-            printf("密码错误,请重试\n");
-            system("pause");
-            return ERROR;
-        }
-    }
-    srand(time(NULL));
-    int a = rand() % 1000000;
-    printf("请输入验证码(%d)：", a);
-    int b;
-    scanf("%d", &b);
-    if (a == b)
-    {
-        printf("验证码正确");
-        while (1)
-        {
-            printf("请输入新密码：");
-            HiddenInput(c1);
-            printf("\n确认密码：");
-            HiddenInput(c2);
-            if (strcmp(c1, c2) == 0)
-            {
-                strcpy(p->customer.password, c1);
-                printf("密码修改成功,返回上层界面\n");
-                system("pause");
-                return OK;
-            }
-        }
-    }
-    else
-        printf("验证码错误,请重试\n");
-    printf("返回上层界面\n");
-    system("pause");
-    return ERROR;
-}
-
-// 管理员菜单
-int admin_menu()
-{
-    while (1)
-    {
-        system("cls");
-        printHeader("欢迎进入管理员菜单");
-        printf("0.保存数据并关闭系统\n");
-        printf("1.查看所有用户\n");
-        printf("2.查看商品及库存情况\n");
-        printf("3.查看销售记录\n");
-        printf("4.供货信息\n");
-        printf("5.查看优惠方案\n");
-        printf("6.修改优惠规则\n");
-        printf("7.关闭管理员菜单\n");
-        printf("请选择：\n");
-        int c;
-        scanf("%d", &c);
-        switch (c)
-        {
-        case 1:
-            if (!ListTraverse_customer(L_customer))
-                printf("错误请重试\n");
-            break;
-        case 2:
-            if (!ListTraverse_goods(L_goods, 1))
-                printf("错误请重试\n");
-            break;
-        case 3:
-            if (!calculate_sale_money(L_goods))
-            {
-                printf("返回菜单请选择 加入商品\n");
-            }
-            break;
-        case 4:
-            if (!view_supply_info(L_goods))
-                printf("错误请重试\n");
-            break;
-        case 5:
-            if (!display_promotion_rules())
-                printf("显示优惠方案失败\n");
-            break;
-        case 6:
-            if (!modify_promotion_rule())
-                printf("错误请重试\n");
-            break;
-        case 7:
-            return 0;
-        case 0:
-            return -1;
-        default:
-            printf("输入错误,请重试\n");
-            break;
-        }
-    }
-    return 0;
-}
-
-// 用户菜单
-void customer_menu(customer *customer)
-{
-    // 初始化购物车
-    LinkList_customer_cart L_customer_cart;
-    L_customer_cart = (LinkList_customer_cart)malloc(sizeof(LNode_customer_cart));
-    if (!L_customer_cart)
-    {
-        printf("ERROR");
-        return;
-    }
-    L_customer_cart->next = NULL;
-    while (1)
-    {
-        system("cls");
-        printHeader("欢迎光临无人超市");
-        printf("%s %d级 积分：%d\n", customer->name, customer->VIP_level, customer->VIP_point);
-        for (int i = 0; i < 124; i++)
-            printf("=");
-        printf("\n");
-
-        // 显示购物车内容
-        printf("购物车：\n");
-        LinkList_customer_cart p = L_customer_cart->next;
-        if (p != NULL)
-        {
-            printCentered("序号", 5);
-            printCentered("商品名", 40);
-            printCentered("数量", 5);
-            printCentered("价格", 15);
-            printf("\n");
-            while (p != NULL)
-            {
-                printf("%4d. ", p->goods.id);
-                printf("%-40s", p->goods.name);
-                printf("%-5d", p->number);
-                printf("%-15.2lf\n", p->goods.price);
-                p = p->next;
-            }
-            for (int i = 0; i < 124; i++)
-                printf("=");
-            printf("\n");
-        }
-        else
-        {
-            printf("购物车是空的\n");
-            for (int i = 0; i < 124; i++)
-                printf("=");
-            printf("\n");
-        }
-
-        printf("1. 浏览商品\n");
-        printf("2. 搜索商品\n");
-        printf("3. 修改购物车商品数量\n");
-        printf("4. 删除购物车商品\n");
-        printf("5. 结算\n");
-        printf("6. 修改密码\n");
-        printf("0. 退出购物\n");
-        printf("请选择：");
-
-        int c;
-        scanf("%d", &c);
-        system("cls");
-
-        switch (c)
-        {
-        case 1:
-            ListTraverse_goods(L_goods, 0);
-            if (!add_customer_cart(L_customer_cart, L_goods))
-            {
-                printf("添加商品失败\n");
-            }
-            system("cls");
-            break;
-        case 2:
-        {
-            char s[100];
-            printf("请输入商品名或商品种类(支持模糊搜索)：");
-            scanf("%s", s);
-            search_goods(s, L_goods);
-            if (!add_customer_cart(L_customer_cart, L_goods))
-            {
-                printf("添加商品失败\n");
-            }
-            system("cls");
-            break;
-        }
-        case 3:
-            // 修改购物车中商品数量
-            if (L_customer_cart->next != NULL)
-            {
-                printf("请输入要修改的商品ID和新数量（输入-1 0结束）：\n");
-                while (1)
-                {
-                    int id, num;
-                    scanf("%d %d", &id, &num);
-                    if (id == -1)
-                        break;
-
-                    LNode_customer_cart *cart = L_customer_cart->next;
-                    while (cart != NULL && cart->goods.id != id)
-                    {
-                        cart = cart->next;
-                    }
-
-                    if (cart == NULL)
-                    {
-                        printf("购物车中没有ID为%d的商品\n", id);
-                        continue;
-                    }
-
-                    if (num <= 0)
-                    {
-                        // 从购物车中删除
-                        LNode_customer_cart *prev = L_customer_cart;
-                        while (prev->next != cart)
-                        {
-                            prev = prev->next;
-                        }
-                        prev->next = cart->next;
-                        free(cart);
-                        printf("已从购物车中删除该商品\n");
-                    }
-                    else
-                    {
-                        cart->number = num;
-                        printf("已更新商品数量\n");
-                    }
-                }
-            }
-            else
-            {
-                printf("购物车是空的\n");
-            }
-            system("pause");
-            break;
-        case 4:
-            // 从购物车中删除商品
-            if (L_customer_cart->next != NULL)
-            {
-                printf("请输入要删除的商品ID（输入-1结束）：\n");
-                while (1)
-                {
-                    int id;
-                    scanf("%d", &id);
-                    if (id == -1)
-                        break;
-                    LNode_customer_cart *prev = L_customer_cart;
-                    LNode_customer_cart *cart = L_customer_cart->next;
-                    while (cart != NULL && cart->goods.id != id)
-                    {
-                        prev = cart;
-                        cart = cart->next;
-                    }
-
-                    if (cart == NULL)
-                    {
-                        printf("购物车中没有ID为%d的商品\n", id);
-                        continue;
-                    }
-
-                    prev->next = cart->next;
-                    free(cart);
-                    printf("已从购物车中删除该商品\n");
-                }
-            }
-            else
-            {
-                printf("购物车是空的\n");
-            }
-            system("pause");
-            break;
-        case 5:
-            if (!settlement(L_customer_cart, customer, L_goods))
-            {
-                printf("结算失败\n");
-            }
-            break;
-        case 6:
-            find_password(L_customer, 0);
-            break;
-        case 0:
-            // 释放购物车内存
-            while (L_customer_cart->next != NULL)
-            {
-                LNode_customer_cart *temp = L_customer_cart->next;
-                L_customer_cart->next = temp->next;
-                free(temp);
-            }
-            free(L_customer_cart);
-            return;
-        default:
-            printf("输入错误,请重试\n");
-            system("pause");
-            break;
-        }
-    }
-}
-
 // 显示当前优惠方案
 status display_promotion_rules()
 {
@@ -1461,8 +1198,8 @@ status display_promotion_rules()
     // 4. 积分优惠
     printf("\n【积分优惠】\n");
     printf("----------------------------------------\n");
-    printf("每100积分可抵现：%.2lf元\n", current_discount.point_discount);
-    printf("积分获取规则：每消费1元可得1积分\n");
+    printf("每100积分可抵现 : %.2lf元\n", current_discount.point_discount);
+    printf("积分获取规则 : 每消费1元可得1积分\n");
     printf("----------------------------------------\n");
 
     printf("\n");
@@ -1470,6 +1207,408 @@ status display_promotion_rules()
         printf("=");
     system("pause");
     return OK;
+}
+
+// 修改优惠规则
+status modify_promotion_rule()
+{
+    int i;
+    for (i = 0; i < 124; i++)
+        printf("=");
+    printf("\n");
+    printCentered("修改优惠", 124);
+    printf("\n");
+    for (i = 0; i < 124; i++)
+        printf("=");
+    printf("\n");
+    printf("1.满减\n");
+    printf("2.VIP积分规则\n");
+    printf("3.会员等级打折\n");
+    printf("4.满赠\n");
+    printf("0.返回上层界面\n");
+    int c;
+    scanf("%d", &c);
+    switch (c)
+    {
+    case 1:
+    {
+        current_discount.full_reduction[0][0] = 0;
+        current_discount.full_reduction[1][0] = 0;
+        for (i = 0; i < 100; i++)
+        {
+            printf("请输入满减金额%d层金额(输入-1结束) : ", i + 1);
+            scanf("%lf", &current_discount.full_reduction[0][i]);
+            if (current_discount.full_reduction[0][i] == -1)
+                break;
+            printf("\n");
+            printf("请输入满减金额%lf对应的优惠金额 : ", current_discount.full_reduction[0][i]);
+            scanf("%lf", &current_discount.full_reduction[1][i]);
+        }
+        printf("修改成功\n");
+        system("pause");
+        return OK;
+    }
+    case 3:
+    {
+        current_discount.VIP_discount[0][0] = 0;
+        current_discount.VIP_discount[1][0] = 0;
+        for (i = 0; i < 100; i++)
+        {
+            printf("请输入VIP等级%d层等级(输入-1结束) : ", i + 1);
+            scanf("%lf", &current_discount.VIP_discount[0][i]);
+            if (current_discount.VIP_discount[0][i] == -1)
+                break;
+            printf("\n");
+            printf("请输入VIP等级%lf对应的折扣 : ", current_discount.VIP_discount[0][i]);
+            scanf("%lf", &current_discount.VIP_discount[1][i]);
+        }
+        printf("修改成功\n");
+        system("pause");
+        return OK;
+    }
+    case 4:
+    {
+        current_discount.full_gift[0][0] = 0;
+        current_discount.full_gift[1][0] = 0;
+        printf("请输入满赠金额%d层金额(输入-1结束) : ", i + 1);
+        scanf("%lf", &current_discount.full_gift[0][i]);
+        if (current_discount.full_gift[0][i] == -1)
+            break;
+        printf("\n");
+        printf("请输入满赠金额%d对应的赠品ID : ", current_discount.full_gift[0][i]);
+        scanf("%d", &current_discount.full_gift[1][i]);
+        printf("修改成功\n");
+        system("pause");
+        return OK;
+    }
+    case 2:
+    {
+        printf("请输入积分100积分抵的金额 : ");
+        scanf("%lf", &current_discount.point_discount);
+        printf("修改成功\n");
+        system("pause");
+        return OK;
+    }
+    case 0:
+        system("pause");
+        return OK;
+    default:
+        printf("输入错误,请重试\n");
+        system("pause");
+        return ERROR;
+    }
+}
+
+// 查看供货信息
+status view_supply_info(LinkList_goods &L)
+{
+    LNode_goods *p = L->next;
+    if (p == NULL) // 如果链表为空
+    {
+        printf("暂无商品记录\n");
+        printf("请加入商品\n");
+        return ERROR;
+    }
+    while (p != NULL)
+    {
+        if (p->goods.stock <= 10)
+        {
+            printf("%d. %s %lf\n", p->goods.id, p->goods.name, p->goods.price);
+        }
+        p = p->next;
+    }
+    printf("请输入供应商数量");
+    int n;
+    char name[256];
+    double price;
+    scanf("%d", &n);
+    printf("请输入供应商1的名称 : ");
+    scanf("%s", name);
+    printf("请输入供应商1的价格 : ");
+    scanf("%lf", &price);
+    for (int i = 2; i <= n; i++)
+    {
+        char nnn[256];
+
+        printf("请输入供应商%d的名称(以-1结束) : ", i);
+        scanf("%s", nnn);
+        if (strcmp(nnn, "-1") == 0)
+            break;
+        printf("请输入供应商%d的价格 : ", i);
+        double p;
+        scanf("%lf", &p);
+        if (p < price)
+        {
+            strcpy(name, nnn);
+            price = p;
+        }
+    }
+    printf("供应商名称 : %s 价格 : %lf\n是最优的可以从其中进货\n", name, price);
+    printf("返回管理员清单");
+    system("pause");
+    return OK;
+}
+
+// 找回/改密码
+status find_password(LinkList_customer &L, int i)
+{
+    char name[100];
+    char c1[256], c2[256];
+    printf("请输入用户名 : ");
+    scanf("%s", name);
+    LNode_customer *p = L->next;
+    while (p != NULL)
+    {
+        if (strcmp(p->customer.name, name) == 0)
+            break;
+        p = p->next;
+    }
+    if (p == NULL)
+    {
+        printf("用户名不存在,请重试\n");
+        system("pause");
+        return ERROR;
+    }
+    if (i == 0)
+    {
+        printf("请输入原密码 : ");
+        HiddenInput(c1);
+        if (strcmp(p->customer.password, c1) == 0)
+            ;
+        else
+        {
+            printf("密码错误,请重试\n");
+            system("pause");
+            return ERROR;
+        }
+    }
+    srand(time(NULL));
+    int a = rand() % 1000000;
+    printf("请输入验证码(%d) : ", a);
+    int b;
+    scanf("%d", &b);
+    if (a == b)
+    {
+        printf("验证码正确");
+        while (1)
+        {
+            printf("请输入新密码 : ");
+            HiddenInput(c1);
+            printf("\n确认密码 : ");
+            HiddenInput(c2);
+            if (strcmp(c1, c2) == 0)
+            {
+                strcpy(p->customer.password, c1);
+                printf("密码修改成功,返回上层界面\n");
+                system("pause");
+                return OK;
+            }
+        }
+    }
+    else
+        printf("验证码错误,请重试\n");
+    printf("返回上层界面\n");
+    system("pause");
+    return ERROR;
+}
+
+/*-------------------------------------------
+                菜单界面
+-------------------------------------------*/
+
+// 管理员菜单
+int admin_menu()
+{
+    while (1)
+    {
+        system("cls");
+        printHeader("欢迎进入管理员菜单");
+        printf("0.保存数据并关闭系统\n");
+        printf("1.查看所有用户\n");
+        printf("2.查看商品及库存情况\n");
+        printf("3.查看销售记录\n");
+        printf("4.供货信息\n");
+        printf("5.查看优惠方案\n");
+        printf("6.修改优惠规则\n");
+        printf("7.关闭管理员菜单\n");
+        printf("请选择 : \n");
+        int c;
+        scanf("%d", &c);
+        switch (c)
+        {
+        case 1:
+            if (!ListTraverse_customer(L_customer))
+                printf("错误请重试\n");
+            break;
+
+        case 2:
+            if (!ListTraverse_goods(L_goods, 1))
+                printf("错误请重试\n");
+            break;
+
+        case 3:
+
+            if (!calculate_sale_money(L_goods))
+            {
+                printf("返回菜单请选择 加入商品\n");
+            }
+            break;
+
+        case 4:
+            if (!view_supply_info(L_goods))
+                printf("错误请重试\n");
+            break;
+
+        case 5:
+            if (!display_promotion_rules())
+                printf("显示优惠方案失败\n");
+            break;
+
+        case 6:
+            if (!modify_promotion_rule())
+                printf("错误请重试\n");
+            break;
+
+        case 7:
+            return 0;
+
+        case 0:
+
+            return -1;
+
+        default:
+            printf("输入错误,请重试\n");
+            break;
+        }
+    }
+    return 0;
+}
+
+// 用户菜单
+void customer_menu(customer *customer)
+{
+    // 初始化购物车
+    LinkList_customer_cart L_customer_cart;
+    L_customer_cart = (LinkList_customer_cart)malloc(sizeof(LNode_customer_cart));
+    if (!L_customer_cart)
+    {
+        printf("ERROR");
+        return;
+    }
+    L_customer_cart->next = NULL;
+    while (1)
+    {
+        system("cls");
+        printHeader("欢迎光临无人超市");
+        printf("%s %d级 积分 : %d\n", customer->name, customer->VIP_level, customer->VIP_point);
+        for (int i = 0; i < 124; i++)
+            printf("=");
+        printf("\n");
+
+        // 显示购物车内容
+        printf("购物车 : \n");
+        LinkList_customer_cart p = L_customer_cart->next;
+        if (p != NULL)
+        {
+            printCentered("序号", 5);
+            printCentered("商品名", 40);
+            printCentered("数量", 5);
+            printCentered("价格", 15);
+            printf("\n");
+            while (p != NULL)
+            {
+                printf("%4d. ", p->goods.id);
+                printf("%-40s", p->goods.name);
+                printf("%-5d", p->number);
+                printf("%-15.2lf\n", p->goods.price);
+                p = p->next;
+            }
+            for (int i = 0; i < 124; i++)
+                printf("=");
+            printf("\n");
+        }
+        else
+        {
+            printf("购物车是空的\n");
+            for (int i = 0; i < 124; i++)
+                printf("=");
+            printf("\n");
+        }
+
+        printf("1. 浏览商品\n");
+        printf("2. 搜索商品\n");
+        printf("3. 修改购物车商品数量\n");
+        printf("4. 删除购物车商品\n");
+        printf("5. 结算\n");
+        printf("6. 修改密码\n");
+        printf("0. 退出购物\n");
+        printf("请选择 : ");
+
+        int c;
+        scanf("%d", &c);
+        system("cls");
+
+        switch (c)
+        {
+        case 1:
+            ListTraverse_goods(L_goods, 0);
+            if (!add_customer_cart(L_customer_cart, L_goods))
+            {
+                printf("添加商品失败\n");
+            }
+            system("cls");
+            break;
+
+        case 2:
+        {
+            char s[100];
+            printf("请输入商品名或商品种类(支持模糊搜索) : ");
+            scanf("%s", s);
+            search_goods(s, L_goods);
+            if (!add_customer_cart(L_customer_cart, L_goods))
+            {
+                printf("添加商品失败\n");
+            }
+            system("cls");
+            break;
+        }
+
+        case 3:
+            modify_cart_item(L_customer_cart);
+            break;
+
+        case 4:
+            delete_cart_item(L_customer_cart);
+            break;
+
+        case 5:
+            if (!settlement(L_customer_cart, customer, L_goods))
+            {
+                printf("结算失败\n");
+            }
+            break;
+
+        case 6:
+            find_password(L_customer, 0);
+            break;
+
+        case 0:
+            // 释放购物车内存
+            while (L_customer_cart->next != NULL)
+            {
+                LNode_customer_cart *temp = L_customer_cart->next;
+                L_customer_cart->next = temp->next;
+                free(temp);
+            }
+            free(L_customer_cart);
+            return;
+
+        default:
+            printf("输入错误,请重试\n");
+            system("pause");
+            break;
+        }
+    }
 }
 
 /*-------------------------------------------
@@ -1645,7 +1784,7 @@ status load_data()
     fp = fopen("discounts.txt", "r");
     if (!fp)
     {
-        printf("加载优惠规则失败，将使用默认值\n");
+        printf("加载优惠规则失败,将使用默认值\n");
         current_discount.point_discount = 1.0; // 默认100积分抵1元
         return OK;                             // 优惠规则加载失败不影响系统运行
     }
@@ -1660,7 +1799,7 @@ status load_data()
     // 逐行读取文件
     while (fgets(line, sizeof(line), fp))
     {
-        // 跳过空行，遇到空行切换到下一个section
+        // 跳过空行,遇到空行切换到下一个section
         if (line[0] == '\n' || line[0] == '\r')
         {
             section++;
@@ -1717,7 +1856,7 @@ status load_data()
         current_discount.full_gift[0][full_gift_count] = -1;
     }
 
-    // 如果没有读取到积分折扣，设置默认值
+    // 如果没有读取到积分折扣,设置默认值
     if (current_discount.point_discount <= 0)
     {
         current_discount.point_discount = 1.0; // 默认100积分抵1元
@@ -1739,7 +1878,7 @@ int main()
     SetConsoleCP(936);
     setlocale(LC_ALL, "Chinese");*/
 
-    // 控制台初始化（编码、标题、颜色等）
+    // 控制台初始化(编码、标题、颜色等)
     system("title 欢迎光临无人超市");
     // system("color f0");
     system("mode con cols=124 lines=30");
@@ -1778,7 +1917,7 @@ int main()
         }
     }
 
-    // 主循环：显示登录/注册菜单，处理用户选择
+    // 主循环 : 显示登录/注册菜单,处理用户选择
     while (1)
     {
         system("cls");
@@ -1787,8 +1926,8 @@ int main()
         printf("2.新会员注册\n");
         printf("3.会员找回密码\n");
         printf("4.管理员登陆\n");
-        printf("请选择：\n");
-        // 处理用户输入，调用对应功能模块
+        printf("请选择 : \n");
+        // 处理用户输入,调用对应功能模块
         int c;
         scanf("%d", &c);
         system("cls");
@@ -1852,6 +1991,7 @@ int main()
                 printf("保存成功,退出系统\n");
             return 0;
         }
+
         default:
             printf("输入错误,请重试\n");
             break;

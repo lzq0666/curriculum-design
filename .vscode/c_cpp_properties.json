@@ -3,15 +3,14 @@
     {
       "name": "windows-gcc-x64",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "D:/Code software/mingw64/include",
+        "D:/Code software/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include"
       ],
       "compilerPath": "D:/Code software/mingw64/bin/gcc.exe",
       "cStandard": "${default}",
       "cppStandard": "${default}",
-      "intelliSenseMode": "windows-gcc-x64",
-      "compilerArgs": [
-        ""
-      ]
+      "intelliSenseMode": "windows-gcc-x64"
     }
   ],
   "version": 4
