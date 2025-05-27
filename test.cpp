@@ -23,12 +23,7 @@ typedef struct goods {
     int sale_count;
 } goods;
 
-typedef struct discount_scheme {
-    double full_reduction[2][101];
-    double VIP_discount[2][101];
-    int full_gift[2][101];
-    double point_discount;
-} discount_scheme;
+
 
 // 定义与main.cpp相同的链表结构
 typedef struct LNode_customer
@@ -123,45 +118,12 @@ void convert_goods() {
     fclose(bin);
 }
 
-// 将优惠信息文本文件转换为二进制文件
-void convert_discounts() {
-    FILE *txt = fopen("discounts.txt", "r");
-    FILE *bin = fopen("discount_scheme.dll", "wb");
 
-    discount_scheme ds = {0};
-    char tag[20];
-    int i = 0;
-
-    // 读取所有优惠信息
-    while (fscanf(txt, "%19[^,],", tag) == 1) {
-        if (strcmp(tag, "满减") == 0) {
-            fscanf(txt, "%lf,%lf\n", &ds.full_reduction[0][i], &ds.full_reduction[1][i]);
-            i++;
-        } 
-        else if (strcmp(tag, "VIP折扣") == 0) {
-            fscanf(txt, "%lf,%lf\n", &ds.VIP_discount[0][i], &ds.VIP_discount[1][i]);
-            i++;
-        }
-        else if (strcmp(tag, "满赠") == 0) {
-            fscanf(txt, "%d,%d\n", &ds.full_gift[0][i], &ds.full_gift[1][i]);
-            i++;
-        }
-        else if (strcmp(tag, "积分折扣") == 0) {
-            fscanf(txt, "%lf\n", &ds.point_discount);
-        }
-    }
-
-    fwrite(&ds, sizeof(discount_scheme), 1, bin);
-    fclose(txt);
-    fclose(bin);
-}
 
 int main() {
     convert_users();
     system("pause");
     convert_goods();
-    system("pause");
-    convert_discounts();
     system("pause");
     printf("文件转换完成\n");
     system("pause");
