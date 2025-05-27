@@ -14,6 +14,8 @@
 #define LIST_INIT_SIZE 100 // 定义线性表初始长度
 #define status int         // 定义状态码
 
+/*            运行数据储存               */
+
 // 定义用户结构体
 typedef struct customer
 {
@@ -71,28 +73,58 @@ typedef struct LNode_customer_cart
               全局数据结构
 -------------------------------------------*/
 
-// 全局变量
+/*              全局变量                   */
+
 LinkList_customer L_customer;     // 用户链表头节点
 LinkList_goods L_goods;           // 商品链表头节点
 double money;                     // 优惠的金额
 discount_scheme current_discount; // 当前生效的优惠方案
 
-// 声明函数
+/*               声明函数                   */
+
+// 基础功能
 void HiddenInput(char *str);
+void printCentered(const char *format, int width);
+void printHeader(const char *title);
+
+// 链表初始化
+status InitList_customer(LinkList_customer &L);
+status InitList_goods(LinkList_goods &L);
+
+// 用户相关
+status register_customer(LinkList_customer &L);
+status customer_login(LinkList_customer &L, customer **customer);
+status find_password(LinkList_customer &L, int i);
+status ListTraverse_customer(LinkList_customer L);
+
+// 商品相关
 status add_goods(LinkList_goods &L);
 status modify_goods(LinkList_goods &L);
 status delete_goods(LinkList_goods &L);
+status ListTraverse_goods(LinkList_goods L, int i);
+status search_goods(char *s, LinkList_goods &L);
+status view_supply_info(LinkList_goods &L);
 status calculate_sale_money(LinkList_goods &L);
-status find_password(LinkList_customer &L);
+
+// 购物车相关
+status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L);
+status modify_cart_item(LinkList_customer_cart &L_customer_cart);
+status delete_cart_item(LinkList_customer_cart &L_customer_cart);
+status ListTraverse_customer_cart(LinkList_customer_cart L);
+status settlement(LinkList_customer_cart &P, customer *cust, LinkList_goods &L);
+
+// 优惠相关
+status display_promotion_rules();
+status modify_promotion_rule();
+
+// 菜单
 int admin_menu();
 void customer_menu(customer *customer);
+status admin_login();
+
+// 文件数据储存
 status save_data();
 status load_data();
-status ListTraverse_goods(LinkList_goods L, int i);
-status view_supply_info(LinkList_goods &L);
-status modify_promotion_rule();
-status settlement(LinkList_customer_cart &P, customer *cust, LinkList_goods &L);
-status display_promotion_rules(); // 声明显示优惠方案的函数
 
 /*-------------------------------------------
               核心功能函数
@@ -1953,6 +1985,11 @@ int main()
                 printf("用户创建失败,请重试\n");
             break;
 
+        case 3:
+            if (!find_password(L_customer, 1))
+                printf("找回密码失败,请重试\n");
+            break;
+
         case 4:
             if (!admin_login())
                 ;
@@ -1974,11 +2011,6 @@ int main()
                 else
                     break;
             }
-
-        case 3:
-            if (!find_password(L_customer, 1))
-                printf("找回密码失败,请重试\n");
-            break;
 
         case 0:
         {
