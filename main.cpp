@@ -792,7 +792,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         p = p->next;
     }
 
-    /*// 正确操作链表
+    // 正确操作链表
     LNode_customer_cart *current = P->next; // P是头节点，从第一个有效节点开始
   LNode_customer_cart *prev = NULL;
     while (current != NULL)
@@ -808,8 +808,8 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     P->next = NULL; // 清空购物车
     system("pause");
     return OK;
-}*/
-    printf("共%d件商品\n", num - 1);
+
+    printf("共%d件商品\n", num - 1);  
     for (int i = 0; i < 124; i++)
         printf("=");
     printf("\n");
@@ -848,14 +848,14 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         printf("已使用满减优惠：%.2lf\n", total_discount[0]);
     }
     printf("目前您有%d积分\n", c->VIP_point);
-    printf("目前每100积分可抵现：%.2lf\n", c->VIP_point);
+    printf("目前每100积分可抵现：%.2lf\n", current_discount.point_discount);
     printf("是否使用积分抵现？(0:否 1:是)：");
     int choice;
     scanf("%d", &choice);
     if (choice == 1)
     {
         int point_chioce;
-        point_chioce = (c->VIP_point) % 100;
+        point_chioce = (c->VIP_point) / 100;
         total_discount[2] = total_discount[2] - point_chioce * current_discount.point_discount;
         printf("已使用%d积分抵现\n", point_chioce * 100);
         c->VIP_point = c->VIP_point - point_chioce;
@@ -1203,7 +1203,7 @@ void customer_menu(customer *customer)
         printf("%s %d级 积分：%d\n", customer->name, customer->VIP_level, customer->VIP_point);
         for (int i = 0; i < 124; i++)
             printf("=");
-
+        printf("/n");
         printf("购物车：\n");
         LinkList_customer_cart p = L_customer_cart->next;
         printCentered("序号", 5);
@@ -1303,16 +1303,41 @@ status save_data()
         fwrite(&(current2->goods), sizeof(goods), 1, fp);
         current2 = current2->next;
     }
-    fclose(fp);
-
-    // 保存优惠规则
-    fp = fopen("discount_scheme.dll", "wb");
+    fclose(fp);    // 保存优惠规则到文本文件
+    fp = fopen("discounts.txt", "w");
     if (!fp)
     {
         printf("保存优惠规则失败\n");
         return ERROR;
     }
-    fwrite(&current_discount, sizeof(discount_scheme), 1, fp);
+    
+    // 保存满减规则
+    for (int i = 0; i < 101; i++)
+    {
+        if (current_discount.full_reduction[0][i] == -1)
+            break;
+        fprintf(fp, "%.2lf %.2lf\n", current_discount.full_reduction[0][i], current_discount.full_reduction[1][i]);
+    }
+    
+    // 保存VIP折扣规则
+    for (int i = 0; i < 101; i++)
+    {
+        if (current_discount.VIP_discount[0][i] == -1)
+            break;
+        fprintf(fp, "%.2lf %.2lf\n", current_discount.VIP_discount[0][i], current_discount.VIP_discount[1][i]);
+    }
+    
+    // 保存满赠规则
+    for (int i = 0; i < 101; i++)
+    {
+        if (current_discount.full_gift[0][i] == -1)
+            break;
+        fprintf(fp, "%d %d\n", current_discount.full_gift[0][i], current_discount.full_gift[1][i]);
+    }
+    
+    // 保存积分折扣规则
+    fprintf(fp, "%.2lf", current_discount.point_discount);
+    
     fclose(fp);
     return OK;
 }
@@ -1379,13 +1404,36 @@ status load_data()
     fclose(fp);
 
     // 加载优惠规则
-    fp = fopen("discount_scheme.dll", "rb");
+    fp = fopen("discounts.txt", "r");
     if (!fp)
     {
         printf("加载失败\n");
         return ERROR;
     }
-    fread(&current_discount, sizeof(discount_scheme), 1, fp);
+
+    // 逐行读取文本文件中的优惠规则
+    for (int i = 0; i < 101; i++)
+    {
+        if (fscanf(fp, "%lf %lf", &current_discount.full_reduction[0][i], &current_discount.full_reduction[1][i]) != 2)
+            break;
+    }
+    for (int i = 0; i < 101; i++)
+    {
+        if (fscanf(fp, "%lf %lf", &current_discount.VIP_discount[0][i], &current_discount.VIP_discount[1][i]) != 2)
+            break;
+    }
+    for (int i = 0; i < 101; i++)
+    {
+        if (fscanf(fp, "%d %d", &current_discount.full_gift[0][i], &current_discount.full_gift[1][i]) != 2)
+            break;
+    }
+    if (fscanf(fp, "%lf", &current_discount.point_discount) != 1)
+    {
+        printf("积分折扣加载失败\n");
+        fclose(fp);
+        return ERROR;
+    }
+
     fclose(fp);
     return OK;
 }
