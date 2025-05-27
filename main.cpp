@@ -54,6 +54,7 @@ typedef struct LNode_customer
     customer customer;
     struct LNode_customer *next;
 } LNode_customer, *LinkList_customer;
+
 // 定义商品链表
 typedef struct LNode_goods
 {
@@ -136,7 +137,7 @@ status InitList_customer(LinkList_customer &L)
     L = (LinkList_customer)malloc(sizeof(LNode_customer));
     if (!L)
     {
-        printf("EEEOR");
+        printf("ERROR");
         return ERROR;
     }
     else
@@ -153,7 +154,7 @@ status InitList_goods(LinkList_goods &L)
     L = (LinkList_goods)malloc(sizeof(LNode_goods));
     if (!L)
     {
-        printf("EEEOR");
+        printf("ERROR");
         return ERROR;
     }
     else
@@ -595,7 +596,7 @@ status add_goods(LinkList_goods &L)
     LNode_goods *s = (LNode_goods *)malloc(sizeof(LNode_goods));
     if (!s)
     {
-        printf("EEEOR");
+        printf("ERROR");
         return ERROR;
     }
     s->goods.id = p->goods.id + 1;
@@ -829,13 +830,28 @@ status modify_cart_item(LinkList_customer_cart &L_customer_cart)
         return ERROR;
     }
 
-    printf("请输入要修改的商品ID和新数量(输入-1 0结束) : \n");
     while (1)
     {
         int id, num;
-        scanf("%d %d", &id, &num);
+        printf(">");
+        printf("请输入要修改的商品ID(-1结束) : \n");
+        scanf("%d", &id);
+
         if (id == -1)
+        {
             break;
+        }
+
+        do
+        {
+            printf(">");
+            printf("请输入新数量 : \n");
+            scanf("%d", &num);
+            if (num <= 0)
+            {
+                printf("数量必须大于0,请重新输入\n");
+            }
+        } while (num <= 0);
 
         LNode_customer_cart *cart = L_customer_cart->next;
         while (cart != NULL && cart->goods.id != id)
@@ -912,13 +928,17 @@ status delete_cart_item(LinkList_customer_cart &L_customer_cart)
         return ERROR;
     }
 
-    printf("请输入要删除的商品ID(输入-1结束) : \n");
     while (1)
     {
         int id;
+        printf(">");
+        printf("请输入要删除的商品ID(-1结束) : \n");
         scanf("%d", &id);
+
         if (id == -1)
+        {
             break;
+        }
 
         LNode_customer_cart *prev = L_customer_cart;
         LNode_customer_cart *cart = L_customer_cart->next;

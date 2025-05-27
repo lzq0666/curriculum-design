@@ -7,14 +7,14 @@
 #include "windows.h"
 #include "time.h"
 #include "locale.h"  
-//ÇëÒÔgbk±àÂë´ò¿ª
+//ï¿½ï¿½ï¿½ï¿½gbkï¿½ï¿½ï¿½ï¿½ï¿½
 
 #define ERROR 0
 #define OK 1
 #define ElemType int
 #define LIST_INIT_SIZE 100
 #define status int
-// ¶¨ÒåÓÃ»§½á¹¹Ìå
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½á¹¹ï¿½ï¿½
 typedef struct customer
 {
     int id;
@@ -25,42 +25,42 @@ typedef struct customer
     double consume_money;
 } customer;
 
-// ¶¨ÒåÉÌÆ·½á¹¹Ìå
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½á¹¹ï¿½ï¿½
 typedef struct goods
 {
     int id;
     char name[100];
     double price;
-    int state;      // 0:Õý³£ 1:´ÙÏú 2:È±»õ 3:¹ýÆÚ
-    int stock;      // ¿â´æ
-    int type;       // 0:Ë®¹û 1:Êß²Ë 2:ÈâÀà 3:º£ÏÊ 4:ÁãÊ³ 5:ÒûÁÏ 6: ÎÄ¾ß 7: ÆäËû
-    int sale_count; // ÏúÊÛÊýÁ¿
+    int state;      // 0:ï¿½ï¿½ï¿½ï¿½ 1:ï¿½ï¿½ï¿½ï¿½ 2:È±ï¿½ï¿½ 3:ï¿½ï¿½ï¿½ï¿½
+    int stock;      // ï¿½ï¿½ï¿½
+    int type;       // 0:Ë®ï¿½ï¿½ 1:ï¿½ß²ï¿½ 2:ï¿½ï¿½ï¿½ï¿½ 3:ï¿½ï¿½ï¿½ï¿½ 4:ï¿½ï¿½Ê³ 5:ï¿½ï¿½ï¿½ï¿½ 6: ï¿½Ä¾ï¿½ 7: ï¿½ï¿½ï¿½ï¿½
+    int sale_count; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 } goods;
 
-// ¶¨ÒåÓÃ»§Á´±í
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
 typedef struct LNode_customer
 {
     customer customer;
     struct LNode_customer *next;
 } LNode_customer, *LinkList_customer;
-// ¶¨ÒåÉÌÆ·Á´±í
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 typedef struct LNode_goods
 {
     goods goods;
     struct LNode_goods *next;
 } LNode_goods, *LinkList_goods;
 
-// È«¾Ö±äÁ¿
+// È«ï¿½Ö±ï¿½ï¿½ï¿½
 LinkList_customer L_customer;
 LinkList_goods L_goods;
 
-// ÓÃ»§Á´±í³õÊ¼»¯
+// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 status InitList_customer(LinkList_customer &L)
 {
     L = (LinkList_customer)malloc(sizeof(LNode_customer));
     if (!L)
     {
-        printf("EEEOR");
+        printf("ERROR");
         return ERROR;
     }
     else
@@ -71,13 +71,13 @@ status InitList_customer(LinkList_customer &L)
     }
 }
 
-// ÉÌÆ·Á´±í³õÊ¼»¯
+// ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 status InitList_goods(LinkList_goods &L)
 {
     L = (LinkList_goods)malloc(sizeof(LNode_goods));
     if (!L)
     {
-        printf("EEEOR");
+        printf("ERROR");
         return ERROR;
     }
     else
@@ -88,7 +88,7 @@ status InitList_goods(LinkList_goods &L)
     }
 }
 
-// ±éÀúÓÃ»§Á´±í
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
 status ListTraverse_customer(LinkList_customer L)
 {
     LNode_customer *p = L->next;
@@ -97,10 +97,10 @@ status ListTraverse_customer(LinkList_customer L)
         for (int i = 0; i < 124; i++)
             printf("=");
         printf("%d. ", p->customer.id);
-        printf("ÓÃ»§Ãû£º%s", p->customer.name);
-        printf("»áÔ±µÈ¼¶£º%d", p->customer.VIP_level);
-        printf("»áÔ±»ý·Ö£º%d", p->customer.VIP_point);
-        printf("Ïû·Ñ½ð¶î£º%lf", p->customer.consume_money);
+        printf("ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½%s", p->customer.name);
+        printf("ï¿½ï¿½Ô±ï¿½È¼ï¿½ï¿½ï¿½%d", p->customer.VIP_level);
+        printf("ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ö£ï¿½%d", p->customer.VIP_point);
+        printf("ï¿½ï¿½ï¿½Ñ½ï¿½î£º%lf", p->customer.consume_money);
         for (int i = 0; i < 124; i++)
             printf("=");
         p = p->next;
@@ -109,7 +109,7 @@ status ListTraverse_customer(LinkList_customer L)
     return OK;
 }
 
-// ±éÀúÉÌÆ·Á´±í
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 status ListTraverse_goods(LinkList_goods L)
 {
     LNode_goods *p = L->next;
@@ -117,34 +117,34 @@ status ListTraverse_goods(LinkList_goods L)
         printf("=");
     while (p != NULL)
     {
-        printf("ÐòºÅ ÉÌÆ·Ãû ÀàÐÍ ¼Û¸ñ ×´Ì¬ ¿â´æ\n");
+        printf("ï¿½ï¿½ï¿½ ï¿½ï¿½Æ·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¸ï¿½ ×´Ì¬ ï¿½ï¿½ï¿½\n");
         printf("%d. ", p->goods.id);
         printf("%-47s", p->goods.name);
         switch (p->goods.type)
         {
         case 0:
-            printf("Ë®¹û    ");
+            printf("Ë®ï¿½ï¿½    ");
             break;
         case 1:
-            printf("Êß²Ë    ");
+            printf("ï¿½ß²ï¿½    ");
             break;
         case 2:
-            printf("ÈâÀà    ");
+            printf("ï¿½ï¿½ï¿½ï¿½    ");
             break;
         case 3:
-            printf("º£ÏÊ    ");
+            printf("ï¿½ï¿½ï¿½ï¿½    ");
             break;
         case 4:
-            printf("ÁãÊ³    ");
+            printf("ï¿½ï¿½Ê³    ");
             break;
         case 5:
-            printf("ÒûÁÏ    ");
+            printf("ï¿½ï¿½ï¿½ï¿½    ");
             break;
         case 6:
-            printf("ÎÄ¾ß    ");
+            printf("ï¿½Ä¾ï¿½    ");
             break;
         case 7:
-            printf("ÆäËû    ");
+            printf("ï¿½ï¿½ï¿½ï¿½    ");
             break;
         }
         printf("%-15.2lf", p->goods.price);
@@ -158,16 +158,16 @@ status ListTraverse_goods(LinkList_goods L)
     return OK;
 }
 
-// ÎÄ¼þ²Ù×÷
-// ±£´æÊý¾Ýµ½ÎÄ¼þ
+// ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½Ä¼ï¿½
 status save_data()
 {
     FILE *fp;
-    // ±£´æÓÃ»§ÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
     fp = fopen("customer.dll", "wb");
     if (!fp)
     {
-        printf("±£´æÓÃ»§ÐÅÏ¢Ê§°Ü\n");
+        printf("ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢Ê§ï¿½ï¿½\n");
         return ERROR;
     }
     LinkList_customer current1 = L_customer->next, c;
@@ -180,11 +180,11 @@ status save_data()
     }
     fclose(fp);
 
-    // ±£´æÉÌÆ·ÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Ï¢
     fp = fopen("goods.dll", "wb");
     if (!fp)
     {
-        printf("±£´æÉÌÆ·ÐÅÏ¢Ê§°Ü\n");
+        printf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Ï¢Ê§ï¿½ï¿½\n");
         return ERROR;
     }
     LinkList_goods current2 = L_goods, g;
@@ -199,15 +199,15 @@ status save_data()
     fclose(fp);
     return OK;
 }
-// ´ÓÎÄ¼þ¼ÓÔØÊý¾Ý
+// ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 status load_data()
 {
     FILE *fp;
-    // ¼ÓÔØÓÃ»§ÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
     fp = fopen("user.txt", "r");
     if (!fp)
     {
-        printf("¼ÓÔØÊ§°Ü\n");
+        printf("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½\n");
         return ERROR;
     }
     LinkList_customer p = L_customer->next;
@@ -231,11 +231,11 @@ status load_data()
     }
     fclose(fp);
 
-    // ¼ÓÔØÉÌÆ·ÐÅÏ¢
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Ï¢
     fp = fopen("pro1.txt", "r");
     if (!fp)
     {
-        printf("¼ÓÔØÊ§°Ü\n");
+        printf("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½\n");
         return ERROR;
     }
     LinkList_goods p2 = L_goods->next;
@@ -282,17 +282,17 @@ int main()
     printf("1");
     system("pause");
     load_data();
-    printf("¼ÓÔØ³É¹¦\n");
+    printf("ï¿½ï¿½ï¿½Ø³É¹ï¿½\n");
     if (!ListTraverse_goods(L_goods))
-        printf("´íÎóÇëÖØÊÔ\n");
-    printf("×¼±¸Ð´Èë\n");
+        printf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n");
+    printf("×¼ï¿½ï¿½Ð´ï¿½ï¿½\n");
     system("pause");
     if (!save_data())
     {
-        printf("±£´æÊ§°Ü,·µ»Ø¹ÜÀí½çÃæ\n");
+        printf("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½,ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n");
     }
     else
-        printf("±£´æ³É¹¦,ÍË³öÏµÍ³\n");
+        printf("ï¿½ï¿½ï¿½ï¿½É¹ï¿½,ï¿½Ë³ï¿½ÏµÍ³\n");
     system("pause");
     return 0;
 }
