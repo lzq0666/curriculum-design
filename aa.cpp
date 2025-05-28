@@ -94,14 +94,14 @@ status ListTraverse_customer(LinkList_customer L)
     LNode_customer *p = L->next;
     while (p != NULL)
     {
-        for (int i = 0; i < 124; i++)
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         printf("%d. ", p->customer.id);
         printf("�û�����%s", p->customer.name);
         printf("��Ա�ȼ���%d", p->customer.VIP_level);
         printf("��Ա���֣�%d", p->customer.VIP_point);
         printf("���ѽ�%lf", p->customer.consume_money);
-        for (int i = 0; i < 124; i++)
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         p = p->next;
     }
@@ -113,7 +113,7 @@ status ListTraverse_customer(LinkList_customer L)
 status ListTraverse_goods(LinkList_goods L)
 {
     LNode_goods *p = L->next;
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     while (p != NULL)
     {
@@ -152,7 +152,7 @@ status ListTraverse_goods(LinkList_goods L)
         printf("%-15d", p->goods.stock);
         p = p->next;
     }
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     system("pause");
     return OK;

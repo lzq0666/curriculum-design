@@ -13,6 +13,8 @@
 #define ElemType int       // 定义元素类型
 #define LIST_INIT_SIZE 100 // 定义线性表初始长度
 #define status int         // 定义状态码
+#define WINDOW_WIDTH 120   // 定义控制台窗口宽度
+#define WINDOW_HEIGHT 30   // 定义控制台窗口高度
 
 /*            运行数据储存               */
 
@@ -95,7 +97,7 @@ status InitList_goods(LinkList_goods &L);
 // 用户相关
 status register_customer(LinkList_customer &L);
 status customer_login(LinkList_customer &L, customer **customer);
-status find_password(LinkList_customer &L, int i);
+status find_password(LinkList_customer &L, int i, char *name);
 status ListTraverse_customer(LinkList_customer L);
 
 // 商品相关
@@ -185,14 +187,18 @@ void printCentered(const char *format, int width)
 // 添加统一的标题和分隔线显示函数
 void printHeader(const char *title)
 {
-    for (int i = 0; i < 124; i++)
+    printf("\033[1;34m"); // 蓝色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
+    printf("\033[0m\n");
+
+    printCentered(title, WINDOW_WIDTH);
+
     printf("\n");
-    printCentered(title, 124);
-    printf("\n");
-    for (int i = 0; i < 124; i++)
+    printf("\033[1;34m"); // 蓝色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
-    printf("\n");
+    printf("\033[0m\n");
 }
 
 // 用户注册 : 添加到链表尾部并分配ID
@@ -240,6 +246,7 @@ status register_customer(LinkList_customer &L)
     s->customer.VIP_point = 0;
     s->customer.consume_money = 0.0;
     printf("恭喜 %s 用户注册成功,正在返回上层界面\n", s->customer.name);
+    system("pause");
     return OK;
 }
 
@@ -262,14 +269,18 @@ status admin_login()
         }
         else
         {
+            printf("\033[91m"); // 红色
             printf("密码错误登陆失败,请重试\n");
+            printf("\033[0m");
             system("pause");
             return ERROR;
         }
     }
     else
     {
+        printf("\033[91m"); // 红色
         printf("名称错误登陆失败,请重试\n");
+        printf("\033[0m");
         system("pause");
         return ERROR;
     }
@@ -316,9 +327,10 @@ status ListTraverse_customer(LinkList_customer L)
     LNode_customer *p = L->next;
 
     // 打印表头,遍历节点输出详细信息
-    for (int i = 0; i < 124; i++)
+    printf("\033[92m"); // 浅绿色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
-    printf("\n");
+    printf("\033[0m\n");
     printCentered("序号", 5);
     printCentered("用户名", 15);
     printCentered("会员等级", 5);
@@ -335,8 +347,10 @@ status ListTraverse_customer(LinkList_customer L)
         printf("\n");
         p = p->next;
     }
-    for (int i = 0; i < 124; i++)
+    printf("\033[92m"); // 浅绿色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
+    printf("\033[0m\n");
     system("pause");
     return OK;
 }
@@ -380,7 +394,7 @@ status ListTraverse_customer_cart(LinkList_customer_cart L)
         printf("\n");
         p = p->next;
     }
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     return OK;
 }
@@ -422,7 +436,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
         printf("\n");
         p = p->next;
     }
-    for (int j = 0; j < 124; j++)
+    for (int j = 0; j < WINDOW_WIDTH; j++)
         printf("=");
     if (i == 0)
     {
@@ -482,7 +496,7 @@ status calculate_sale_money(LinkList_goods &L)
         p = p->next;
     }
     printf("优惠总价格 : %.2lf\n", money);
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     printf("总收入金额 : %.2lf\n", s - money);
     system("pause");
@@ -500,9 +514,10 @@ status search_goods(char *s, LinkList_goods &L)
         {
             if (t == 0) // 如果是第一次找到
             {
-                for (int i = 0; i < 124; i++)
+                printf("\033[92m"); // 浅绿色
+                for (int i = 0; i < WINDOW_WIDTH; i++)
                     printf("=");
-                printf("\n");
+                printf("\033[0m\n");
                 printCentered("序号", 5);
                 printCentered("商品名", 40);
                 printCentered("价格", 15);
@@ -542,8 +557,10 @@ status search_goods(char *s, LinkList_goods &L)
     if (t != 0)
     {
         printf("共找到%d商品\n", t);
-        for (int i = 0; i < 124; i++)
+        printf("\033[92m"); // 浅绿色
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
+        printf("\033[0m\n");
         system("pause");
         return OK;
     }
@@ -775,7 +792,9 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
             LNode_customer_cart *s = (LNode_customer_cart *)malloc(sizeof(LNode_customer_cart));
             if (!s)
             {
+                printf("\033[91m"); // 红色
                 printf("内存分配失败\n");
+                printf("\033[0m");
                 return ERROR;
             }
             s->goods = p->goods;
@@ -811,23 +830,21 @@ status modify_cart_item(LinkList_customer_cart &L_customer_cart)
             printf("%-15.2lf\n", p->goods.price);
             p = p->next;
         }
-        for (int i = 0; i < 124; i++)
-            printf("=");
-        printf("\n");
-    }
-    else
-    {
-        printf("购物车是空的\n");
-        for (int i = 0; i < 124; i++)
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         printf("\n");
     }
     // 如果购物车为空,提示并返回
-    if (L_customer_cart->next == NULL)
+    else
     {
+        printf("\033[91m"); // 红色
         printf("购物车是空的\n");
+        printf("\033[0m");
         system("pause");
         return ERROR;
+        for (int i = 0; i < WINDOW_WIDTH; i++)
+            printf("=");
+        printf("\n");
     }
 
     while (1)
@@ -909,23 +926,21 @@ status delete_cart_item(LinkList_customer_cart &L_customer_cart)
             printf("%-15.2lf\n", p->goods.price);
             p = p->next;
         }
-        for (int i = 0; i < 124; i++)
-            printf("=");
-        printf("\n");
-    }
-    else
-    {
-        printf("购物车是空的\n");
-        for (int i = 0; i < 124; i++)
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         printf("\n");
     }
     // 如果购物车为空,提示并返回
-    if (L_customer_cart->next == NULL)
+    else
     {
+        printf("\033[91m"); // 红色
         printf("购物车是空的\n");
+        printf("\033[0m");
         system("pause");
         return ERROR;
+        for (int i = 0; i < WINDOW_WIDTH; i++)
+            printf("=");
+        printf("\n");
     }
 
     while (1)
@@ -966,19 +981,13 @@ status delete_cart_item(LinkList_customer_cart &L_customer_cart)
 status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 {
     double s = 0.0;
-    for (int i = 0; i < 124; i++)
-        printf("=");
-    printf("\n");
-    printCentered("结算界面", 124);
-    printf("\n");
-    for (int i = 0; i < 124; i++)
-        printf("=");
-    printf("\n");
+    printHeader("结算界面");
 
     LNode_customer_cart *p = P->next;
     if (p == NULL) // 如果购物车为空
     {
         printf("您还未选购商品,无需结账\n");
+        system("pause");
         return ERROR;
     }
     if (p != NULL)
@@ -1023,7 +1032,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         return OK;
     */
     printf("共%d件商品\n", num - 1);
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     printf("\n");
     printf("总价 : %.2lf\n", s);
@@ -1188,7 +1197,9 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     }
     else
     {
+        printf("\033[91m"); // 红色
         printf("支付失败,返回上层界面\n");
+        printf("\033[0m");
         system("pause");
         system("cls");
         return ERROR;
@@ -1255,7 +1266,7 @@ status display_promotion_rules()
     printf("----------------------------------------\n");
 
     printf("\n");
-    for (int i = 0; i < 124; i++)
+    for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
     system("pause");
     return OK;
@@ -1265,13 +1276,7 @@ status display_promotion_rules()
 status modify_promotion_rule()
 {
     int i;
-    for (i = 0; i < 124; i++)
-        printf("=");
-    printf("\n");
-    printCentered("修改优惠", 124);
-    printf("\n");
-    for (i = 0; i < 124; i++)
-        printf("=");
+    printHeader("修改优惠规则");
     printf("\n");
     printf("1.满减\n");
     printf("2.VIP积分规则\n");
@@ -1402,12 +1407,9 @@ status view_supply_info(LinkList_goods &L)
 }
 
 // 找回/改密码
-status find_password(LinkList_customer &L, int i)
+status find_password(LinkList_customer &L, int i, char *name) // i = 1表示忘记密码,0表示修改密码
 {
-    char name[100];
     char c1[256], c2[256];
-    printf("请输入用户名 : ");
-    scanf("%s", name);
     LNode_customer *p = L->next;
     while (p != NULL)
     {
@@ -1458,9 +1460,11 @@ status find_password(LinkList_customer &L, int i)
         }
     }
     else
+    {
         printf("验证码错误,请重试\n");
-    printf("返回上层界面\n");
-    system("pause");
+        printf("返回上层界面\n");
+        system("pause");
+    }
     return ERROR;
 }
 
@@ -1508,17 +1512,29 @@ int admin_menu()
 
         case 4:
             if (!view_supply_info(L_goods))
+            {
+                printf("\033[91m"); // 红色
                 printf("错误请重试\n");
+                printf("\033[0m");
+            }
             break;
 
         case 5:
             if (!display_promotion_rules())
+            {
+                printf("\033[91m"); // 红色
                 printf("显示优惠方案失败\n");
+                printf("\033[0m");
+            }
             break;
 
         case 6:
             if (!modify_promotion_rule())
+            {
+                printf("\033[91m"); // 红色
                 printf("错误请重试\n");
+                printf("\033[0m");
+            }
             break;
 
         case 7:
@@ -1553,9 +1569,10 @@ void customer_menu(customer *customer)
         system("cls");
         printHeader("欢迎光临无人超市");
         printf("%s %d级 积分 : %d\n", customer->name, customer->VIP_level, customer->VIP_point);
-        for (int i = 0; i < 124; i++)
+        printf("\033[92m"); // 浅绿色
+        for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
-        printf("\n");
+        printf("\033[0m\n");
 
         // 显示购物车内容
         printf("购物车 : \n");
@@ -1575,16 +1592,19 @@ void customer_menu(customer *customer)
                 printf("%-15.2lf\n", p->goods.price);
                 p = p->next;
             }
-            for (int i = 0; i < 124; i++)
+            printf("\033[92m"); // 浅绿色
+            for (int i = 0; i < WINDOW_WIDTH; i++)
                 printf("=");
+            printf("\033[0m\n");
             printf("\n");
         }
         else
         {
             printf("购物车是空的\n");
-            for (int i = 0; i < 124; i++)
+            printf("\033[92m"); // 浅绿色
+            for (int i = 0; i < WINDOW_WIDTH; i++)
                 printf("=");
-            printf("\n");
+            printf("\033[0m\n");
         }
 
         printf("1. 浏览商品\n");
@@ -1606,20 +1626,25 @@ void customer_menu(customer *customer)
             ListTraverse_goods(L_goods, 0);
             if (!add_customer_cart(L_customer_cart, L_goods))
             {
+                printf("\033[91m"); // 红色
                 printf("添加商品失败\n");
+                printf("\033[0m");
             }
             system("cls");
             break;
 
         case 2:
         {
+            printHeader("搜索商品");
             char s[100];
             printf("请输入商品名或商品种类(支持模糊搜索) : ");
             scanf("%s", s);
             search_goods(s, L_goods);
             if (!add_customer_cart(L_customer_cart, L_goods))
             {
+                printf("\033[91m"); // 红色
                 printf("添加商品失败\n");
+                printf("\033[0m");
             }
             system("cls");
             break;
@@ -1636,12 +1661,29 @@ void customer_menu(customer *customer)
         case 5:
             if (!settlement(L_customer_cart, customer, L_goods))
             {
+                printf("\033[91m"); // 红色
                 printf("结算失败\n");
+                printf("\033[0m");
             }
             break;
 
         case 6:
-            find_password(L_customer, 0);
+            // 修改密码
+            printHeader("修改密码");
+            printf("请输入用户名 : ");
+            char name[256];
+            scanf("%s", name);
+            if (strcmp(customer->name, name) == 0)
+            {
+                find_password(L_customer, 0, name);
+            }
+            else
+            {
+                printf("\033[91m"); // 红色
+                printf("用户名不匹配, 请重试\n");
+                printf("\033[0m");
+                system("pause");
+            }
             break;
 
         case 0:
@@ -1656,7 +1698,9 @@ void customer_menu(customer *customer)
             return;
 
         default:
+            printf("\033[91m"); // 红色
             printf("输入错误,请重试\n");
+            printf("\033[0m");
             system("pause");
             break;
         }
@@ -1675,7 +1719,9 @@ status save_data()
     fp = fopen("customer.bin", "wb");
     if (!fp)
     {
+        printf("\033[91m"); // 红色
         printf("保存用户信息失败\n");
+        printf("\033[0m");
         return ERROR;
     }
     LinkList_customer current1 = L_customer;
@@ -1691,7 +1737,9 @@ status save_data()
     fp = fopen("goods.bin", "wb");
     if (!fp)
     {
+        printf("\033[91m"); // 红色
         printf("保存商品信息失败\n");
+        printf("\033[0m");
         return ERROR;
     }
     LinkList_goods current2 = L_goods;
@@ -1707,7 +1755,9 @@ status save_data()
     fp = fopen("discounts.txt", "w");
     if (!fp)
     {
+        printf("\033[91m"); // 红色
         printf("保存优惠规则失败\n");
+        printf("\033[0m");
         return ERROR;
     }
 
@@ -1753,7 +1803,11 @@ status load_data()
     fp = fopen("customer.bin", "rb");
     if (!fp)
     {
+
+        printf("\033[91m"); // 红色
         printf("加载失败.1\n");
+        printf("\033[0m");
+
         return ERROR;
     }
     LinkList_customer p = L_customer->next;
@@ -1770,7 +1824,9 @@ status load_data()
         LinkList_customer newNode = (LinkList_customer)malloc(sizeof(LNode_customer));
         if (!newNode)
         {
+            printf("\033[91m"); // 红色
             printf("内存分配失败\n");
+            printf("\033[0m");
             fclose(fp);
             return ERROR;
         }
@@ -1787,7 +1843,9 @@ status load_data()
     fp = fopen("goods.bin", "rb");
     if (!fp)
     {
+        printf("\033[91m"); // 红色
         printf("加载失败.2\n");
+        printf("\033[0m");
         return ERROR;
     }
     LinkList_goods p2 = L_goods->next;
@@ -1805,7 +1863,9 @@ status load_data()
         LinkList_goods newNode = (LinkList_goods)malloc(sizeof(LNode_goods));
         if (!newNode)
         {
+            printf("\033[91m"); // 红色
             printf("内存分配失败\n");
+            printf("\033[0m");
             fclose(fp);
             return ERROR;
         }
@@ -1862,27 +1922,21 @@ status load_data()
         switch (section)
         {
         case 0: // 满减规则
-            if (sscanf(line, "%lf %lf",
-                       &current_discount.full_reduction[0][full_reduction_count],
-                       &current_discount.full_reduction[1][full_reduction_count]) == 2)
+            if (sscanf(line, "%lf %lf", &current_discount.full_reduction[0][full_reduction_count], &current_discount.full_reduction[1][full_reduction_count]) == 2)
             {
                 full_reduction_count++;
             }
             break;
 
         case 1: // 会员折扣规则
-            if (sscanf(line, "%lf %lf",
-                       &current_discount.VIP_discount[0][vip_discount_count],
-                       &current_discount.VIP_discount[1][vip_discount_count]) == 2)
+            if (sscanf(line, "%lf %lf", &current_discount.VIP_discount[0][vip_discount_count], &current_discount.VIP_discount[1][vip_discount_count]) == 2)
             {
                 vip_discount_count++;
             }
             break;
 
         case 2: // 满赠规则
-            if (sscanf(line, "%d %d",
-                       &current_discount.full_gift[0][full_gift_count],
-                       &current_discount.full_gift[1][full_gift_count]) == 2)
+            if (sscanf(line, "%d %d", &current_discount.full_gift[0][full_gift_count], &current_discount.full_gift[1][full_gift_count]) == 2)
             {
                 full_gift_count++;
             }
@@ -1925,15 +1979,18 @@ status load_data()
 int main()
 {
     // setlocale(LC_ALL, ".936");
-    /*system("chcp 936 > nul");// 切换到 GBK 编码
+    /*system("chcp 936 > nul");
     SetConsoleOutputCP(936);
     SetConsoleCP(936);
     setlocale(LC_ALL, "Chinese");*/
 
     // 控制台初始化(编码、标题、颜色等)
     system("title 欢迎光临无人超市");
-    // system("color f0");
-    system("mode con cols=124 lines=30");
+
+    char cmd[128];
+    sprintf(cmd, "mode con cols=%d lines=%d", WINDOW_WIDTH, WINDOW_HEIGHT);
+    system(cmd);
+
     // 初始化用户链表
     while (1)
     {
@@ -1955,7 +2012,9 @@ int main()
     // 加载数据文件
     if (!load_data())
     {
+        printf("\033[91m"); // 红色
         printf("加载失败\n");
+        printf("\033[0m");
         printf("请输入1重新加载\n");
         int c;
         scanf("%d", &c);
@@ -1963,7 +2022,9 @@ int main()
         {
             if (!load_data())
             {
+                printf("\033[91m"); // 红色
                 printf("加载失败\n");
+                printf("\033[0m");
                 return 0;
             }
         }
@@ -2002,12 +2063,24 @@ int main()
 
         case 2:
             if (!register_customer(L_customer))
+            {
+                printf("\033[91m"); // 红色
                 printf("用户创建失败,请重试\n");
+                printf("\033[0m");
+            }
             break;
 
         case 3:
-            if (!find_password(L_customer, 1))
+            printHeader("找回密码");
+            printf("请输入用户名 : ");
+            char name[256];
+            scanf("%s", name);
+            if (!find_password(L_customer, 1, name))
+            {
+                printf("\033[91m"); // 红色
                 printf("找回密码失败,请重试\n");
+                printf("\033[0m");
+            }
             break;
 
         case 4:
@@ -2021,7 +2094,9 @@ int main()
                 {
                     if (!save_data())
                     {
+                        printf("\033[91m"); // 红色
                         printf("保存失败,返回管理界面\n");
+                        printf("\033[0m");
                         admin_menu();
                     }
                     else
@@ -2036,7 +2111,9 @@ int main()
         {
             if (!save_data())
             {
+                printf("\033[91m"); // 红色
                 printf("保存失败,返回管理界面\n");
+                printf("\033[0m");
                 admin_menu();
             }
             else
@@ -2045,7 +2122,9 @@ int main()
         }
 
         default:
+            printf("\033[91m"); // 红色
             printf("输入错误,请重试\n");
+            printf("\033[0m");
             break;
         }
     }
