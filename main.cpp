@@ -124,14 +124,29 @@ status settlement(LinkList_customer_cart &P, customer *cust, LinkList_goods &L);
 status display_promotion_rules();
 status modify_promotion_rule();
 
-// 菜单
+// 菜单界面
 int admin_menu();
 void customer_menu(customer *customer);
 status admin_login();
 
-// 文件数据储存
+// 文件操作
 status save_data();
 status load_data();
+
+// 数组操作
+int get_double_Array_Width(double (*arr)[MAX_DISCOUNT]);
+int get_int_Array_Width(int (*arr)[MAX_DISCOUNT]);
+
+// 排序相关
+int compare_goods_by_sales_desc(const void *a, const void *b);
+int compare_customer_by_payment_desc(const void *a, const void *b);
+status display_customers_by_payment(LinkList_customer &L);
+status display_goods_by_sales(LinkList_goods &L);
+
+// 二分查找
+int binary_search_full_reduction(double s, double threshold[], int size);
+int binary_search_vip_discount(int VIP_level, double level[], int size);
+int binary_search_full_gift(double amount, int threshold[], int size);
 
 /*-------------------------------------------
               核心功能函数
@@ -388,7 +403,7 @@ status ListTraverse_customer_cart(LinkList_customer_cart L)
         printf("%-40s", p->goods.name);
         printf("%-5d", p->number);
         printf("%-15.2lf", p->goods.price);
-        printf("%10s", p->goods.type);
+        printf("%7s", p->goods.type);
         switch (p->goods.state)
         {
         case 0:
@@ -404,6 +419,7 @@ status ListTraverse_customer_cart(LinkList_customer_cart L)
             printCentered("过期", 10);
             break;
         }
+        printf("     ");
         printf("%-10d", p->goods.stock);
         printf("\n");
         p = p->next;
@@ -1542,9 +1558,8 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     int num = 1;
     while (p != NULL)
     {
-        printf("%4d. %-30s %-15.2lf %-5d %-15.2lf\n",
-               num, p->goods.name, p->goods.price, p->number, p->goods.price * p->number);
-        s += p->goods.price * p->number;
+        printf("%4d. %-30s %-15.2lf %-5d %-15.2lf\n", num, p->goods.name, p->goods.price, p->number, p->goods.price * p->number);
+        s = s + (p->goods.price * p->number);
         num++;
         p = p->next;
     }
@@ -1652,7 +1667,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     printf("支付成功\n");
     money = money + (s - total_discount[0]);
     c->consume_money = c->consume_money + total_discount[0];
-    if ((int)c->consume_money / 100 > c->VIP_level)
+    if ((int)c->consume_money / 100 > c->VIP_level) // 每消费100元提升一级VIP
         c->VIP_level++;
 
     c->VIP_point = c->VIP_point + (int)total_discount[0];
@@ -1791,6 +1806,11 @@ void customer_menu(customer *customer)
         system("cls");
         printHeader("欢迎光临无人超市");
         printf("%s %d级 积分 : %d\n", customer->name, customer->VIP_level, customer->VIP_point);
+        printf("\033[92m"); // 浅绿色
+        printf("tips : 本店有会员折扣、满减折扣，满一定金额更有礼品赠送，快滴来探索啦！！！\n");
+        printf("       每消费一元得1积分，可抵商品金额。");
+        printf("\033[91m"); // 红色
+        printf("一但退出本系统购物车就会清空哦！！\n");
         printf("\033[92m"); // 浅绿色
         for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
