@@ -422,7 +422,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
     printCentered("商品名", 40);
     printCentered("价格", 15);
     printCentered("种类", 10);
-    printCentered("状态", 10);
+    printCentered("状态", 8);
     printCentered("库存", 10);
     printf("\n");
     while (p != NULL)
@@ -446,7 +446,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
             printCentered("过期", 10);
             break;
         }
-        printf("%-15d", p->goods.stock);
+        printf("%-10d", p->goods.stock);
         printf("\n");
         p = p->next;
     }
@@ -780,6 +780,7 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
         if (id == -1)
         {
             break;
+            return OK;
         }
 
         do
@@ -848,7 +849,7 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L)
             printf("已添加 %s %d 件到购物车\n", p->goods.name, num);
         }
     }
-    printf("添加完成\n");
+    system("pause");
     return OK;
 }
 
@@ -1289,6 +1290,168 @@ status find_password(LinkList_customer &L, int i, char *name) // i = 1表示忘记密
     return ERROR;
 }
 
+/*               排序算法             */
+
+// 排序规则
+int compare_goods_by_sales_desc(const void *a, const void *b) // 按销售量降序排序
+{
+    goods *ga = *(goods **)a;
+    goods *gb = *(goods **)b;
+    return gb->sale_count - ga->sale_count; // 降序
+}
+
+int compare_customer_by_payment_desc(const void *a, const void *b) // 按消费金额降序排序
+{
+    customer *ca = *(customer **)a;
+    customer *cb = *(customer **)b;
+    return (cb->consume_money > ca->consume_money) - (cb->consume_money < ca->consume_money);
+}
+
+// 快速排序并展示
+
+// 用户按消费金额降序排序并格式化输出
+status display_customers_by_payment(LinkList_customer &L)
+{
+    // 计数并非检查是否为空
+    int num = 0;
+    LNode_customer *p = L->next;
+    while (p != NULL)
+    {
+        num++;
+        p = p->next;
+    }
+    if (num == 0)
+    {
+        printf("\033[91m"); // 红色
+        printf("暂无用户记录\n");
+        printf("\033[0m");
+        system("pause");
+        return ERROR;
+    }
+    p = L->next;
+
+    // customer结构体映射数组
+    customer **customerPtrs = (customer **)malloc(num * sizeof(customer *));
+    for (int i = 0; i < num; i++)
+    {
+        customerPtrs[i] = &(p->customer);
+        p = p->next;
+    }
+
+    // 快速排序
+    qsort(customerPtrs, num, sizeof(customer *), compare_customer_by_payment_desc);
+
+    // 格式化输出
+    printHeader("按消费金额排行的用户列表");
+    printf("\033[92m"); // 浅绿色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
+        printf("=");
+    printf("\033[0m\n");
+    printCentered("序号", 5);
+    printCentered("用户名", 15);
+    printCentered("消费金额", 15);
+    printCentered("会员等级", 5);
+    printCentered("会员积分", 15);
+    printf("\n");
+    for (int i = 0; i < num; i++)
+    {
+        printf("%5d.", customerPtrs[i]->id);
+        printf("%-15s", customerPtrs[i]->name);
+        printf("%-15.2lf", customerPtrs[i]->consume_money);
+        printf("%-5d", customerPtrs[i]->VIP_level);
+        printf("%-15d", customerPtrs[i]->VIP_point);
+        printf("\n");
+    }
+    printf("\033[92m"); // 浅绿色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
+        printf("=");
+    printf("\033[0m\n");
+    free(customerPtrs);
+    system("pause");
+    return OK;
+}
+
+// 商品按销售量降序排序并格式化输出
+status display_goods_by_sales(LinkList_goods &L)
+{
+    // 计数并非检查是否为空
+    int num = 0;
+    LNode_goods *p = L->next;
+    while (p != NULL)
+    {
+        num++;
+        p = p->next;
+    }
+    if (num == 0)
+    {
+        printf("\033[91m"); // 红色
+        printf("暂无商品记录\n");
+        printf("\033[0m");
+        system("pause");
+        return ERROR;
+    }
+    p = L->next;
+
+    // goods结构体映射数组
+    goods **goodsPtrs = (goods **)malloc(num * sizeof(goods *));
+    for (int i = 0; i < num; i++)
+    {
+        goodsPtrs[i] = &(p->goods);
+        p = p->next;
+    }
+
+    // 快速排序
+    qsort(goodsPtrs, num, sizeof(goods *), compare_goods_by_sales_desc);
+
+    // 格式化输出
+    printHeader("商品信息（按销售量排行）\n");
+    printf("\033[92m");
+    for (int i = 0; i < WINDOW_WIDTH; i++)
+        printf("=");
+    printf("\033[0m\n");
+    printCentered("序号", 5);
+    printCentered("商品名", 25);
+    printCentered("价格", 15);
+    printCentered("销量", 10);
+    printCentered("种类", 10);
+    printCentered("状态", 8);
+    printCentered("库存", 10);
+    printf("\n");
+    for (int i = 0; i < num; i++)
+    {
+        printf("%4d.", goodsPtrs[i]->id);
+        printf("%-25s", goodsPtrs[i]->name);
+        printf("%-15.2lf", goodsPtrs[i]->price);
+        printf("%-10d", goodsPtrs[i]->sale_count);
+        printf("%-10s", goodsPtrs[i]->type);
+        switch (goodsPtrs[i]->state)
+        {
+        case 0:
+            printCentered("正常", 10);
+            break;
+        case 1:
+            printCentered("其他", 10);
+            break;
+        case 2:
+            printCentered("缺货", 10);
+            break;
+        case 3:
+            printCentered("过期", 10);
+            break;
+        }
+        printf("%-10d", goodsPtrs[i]->stock);
+        printf("\n");
+    }
+
+    printf("\033[92m"); // 浅绿色
+    for (int i = 0; i < WINDOW_WIDTH; i++)
+        printf("=");
+    printf("\033[0m\n");
+    free(goodsPtrs);
+    system("pause");
+    return OK;
+}
+
 /*               二分查找             */
 
 // 二分查找满减算法
@@ -1414,9 +1577,9 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         printf("VIP%d可用%.1f折优惠\n", c->VIP_level, current_discount.VIP_discount[1][vip_idx] / 10.0);
     }
 
-    //择优选择优惠方案
+    // 择优选择优惠方案
     printf("系统已自动匹配最优折扣\n");
-    total_discount[0] = fmin(fmin(total_discount[1], total_discount[2]), total_discount[0]); //fmin取小
+    total_discount[0] = fmin(fmin(total_discount[1], total_discount[2]), total_discount[0]); // fmin取小
     if (total_discount[0] == s)
     {
         printf("未使用任何折扣\n");
@@ -1529,15 +1692,18 @@ int admin_menu()
         printHeader("欢迎进入管理员菜单");
         printf("0.保存数据并关闭系统\n");
         printf("1.查看所有用户\n");
-        printf("2.查看商品及库存情况\n");
-        printf("3.查看销售记录\n");
-        printf("4.供货信息\n");
-        printf("5.查看优惠方案\n");
-        printf("6.修改优惠规则\n");
-        printf("7.关闭管理员菜单\n");
+        printf("2.以消费额排序查看用户\n");
+        printf("3.查看商品及库存情况\n");
+        printf("4.以销售量排序浏览商品\n");
+        printf("5.查看销售记录\n");
+        printf("6.供货信息\n");
+        printf("7.查看优惠方案\n");
+        printf("8.修改优惠规则\n");
+        printf("9.关闭管理员菜单\n");
         printf("请选择 : \n");
         int c;
         scanf("%d", &c);
+        system("cls");
         switch (c)
         {
         case 1:
@@ -1546,11 +1712,19 @@ int admin_menu()
             break;
 
         case 2:
+            if (!display_customers_by_payment(L_customer))
+                printf("错误请重试\n");
+            break;
+        case 3:
             if (!ListTraverse_goods(L_goods, 1))
                 printf("错误请重试\n");
             break;
 
-        case 3:
+        case 4:
+            if (!display_goods_by_sales(L_goods))
+                printf("错误请重试\n");
+            break;
+        case 5:
 
             if (!calculate_sale_money(L_goods))
             {
@@ -1558,7 +1732,7 @@ int admin_menu()
             }
             break;
 
-        case 4:
+        case 6:
             if (!view_supply_info(L_goods))
             {
                 printf("\033[91m"); // 红色
@@ -1567,7 +1741,7 @@ int admin_menu()
             }
             break;
 
-        case 5:
+        case 7:
             if (!display_promotion_rules())
             {
                 printf("\033[91m"); // 红色
@@ -1576,7 +1750,7 @@ int admin_menu()
             }
             break;
 
-        case 6:
+        case 8:
             if (!modify_promotion_rule())
             {
                 printf("\033[91m"); // 红色
@@ -1585,7 +1759,7 @@ int admin_menu()
             }
             break;
 
-        case 7:
+        case 9:
             return 0;
 
         case 0:
@@ -1656,11 +1830,12 @@ void customer_menu(customer *customer)
         }
 
         printf("1. 浏览商品\n");
-        printf("2. 搜索商品\n");
-        printf("3. 修改购物车商品数量\n");
-        printf("4. 删除购物车商品\n");
-        printf("5. 结算\n");
-        printf("6. 修改密码\n");
+        printf("2. 以销售量排序浏览商品\n");
+        printf("3. 搜索商品\n");
+        printf("4. 修改购物车商品数量\n");
+        printf("5. 删除购物车商品\n");
+        printf("6. 结算\n");
+        printf("7. 修改密码\n");
         printf("0. 退出购物\n");
         printf("请选择 : ");
 
@@ -1683,6 +1858,22 @@ void customer_menu(customer *customer)
 
         case 2:
         {
+            if (!display_goods_by_sales(L_goods))
+                printf("请重试\n");
+            else
+            {
+                if (!add_customer_cart(L_customer_cart, L_goods))
+                {
+                    printf("\033[91m"); // 红色
+                    printf("添加商品失败\n");
+                    printf("\033[0m");
+                    system("pause");
+                }
+            }
+            break;
+        }
+        case 3:
+        {
             printHeader("搜索商品");
             char s[100];
             printf("请输入商品名或商品种类(支持模糊搜索) : ");
@@ -1693,20 +1884,21 @@ void customer_menu(customer *customer)
                 printf("\033[91m"); // 红色
                 printf("添加商品失败\n");
                 printf("\033[0m");
+                system("pause");
             }
             system("cls");
             break;
         }
 
-        case 3:
+        case 4:
             modify_cart_item(L_customer_cart);
             break;
 
-        case 4:
+        case 5:
             delete_cart_item(L_customer_cart);
             break;
 
-        case 5:
+        case 6:
             if (!settlement(L_customer_cart, customer, L_goods))
             {
                 printf("\033[91m"); // 红色
@@ -1715,7 +1907,7 @@ void customer_menu(customer *customer)
             }
             break;
 
-        case 6:
+        case 7:
             // 修改密码
             printHeader("修改密码");
             printf("请输入用户名 : ");
