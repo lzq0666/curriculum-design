@@ -325,6 +325,16 @@ status customer_login(LinkList_customer &L, customer **customer)
 status ListTraverse_customer(LinkList_customer L)
 {
     LNode_customer *p = L->next;
+    system("cls");
+    if (p == NULL) // 如果链表为空
+    {
+        printf("\033[91m"); // 红色
+        printf("暂无用户记录\n");
+        printf("\033[0m");
+        system("pause");
+        return ERROR;
+    }
+    printHeader("用户信息");
 
     // 打印表头,遍历节点输出详细信息
     printf("\033[92m"); // 浅绿色
@@ -438,6 +448,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
     }
     for (int j = 0; j < WINDOW_WIDTH; j++)
         printf("=");
+    printf("\n");
     if (i == 0)
     {
         system("pause");
@@ -479,6 +490,7 @@ status ListTraverse_goods(LinkList_goods L, int i)
 // 遍历商品链表并输出销售金额
 status calculate_sale_money(LinkList_goods &L)
 {
+    system("cls");
     printHeader("销售金额统计");
     double s = 0;
     LNode_goods *p = L->next;
@@ -498,6 +510,7 @@ status calculate_sale_money(LinkList_goods &L)
     printf("优惠总价格 : %.2lf\n", money);
     for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
+    printf("\n");
     printf("总收入金额 : %.2lf\n", s - money);
     system("pause");
     return OK;
@@ -561,12 +574,13 @@ status search_goods(char *s, LinkList_goods &L)
         for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         printf("\033[0m\n");
+        printf("\n");  // 添加结果后的换行
         system("pause");
         return OK;
     }
     else
     {
-        printf("找不到商品,\n");
+        printf("找不到商品.\n");
         system("pause");
         return ERROR;
     }
@@ -982,6 +996,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 {
     double s = 0.0;
     printHeader("结算界面");
+    printf("\n");  // 添加标题后的换行
 
     LNode_customer_cart *p = P->next;
     if (p == NULL) // 如果购物车为空
@@ -1054,8 +1069,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         if (current_discount.full_reduction[0][i] == -1)
             break;
 
-        if (s >= current_discount.full_reduction[0][i] &&
-            current_discount.full_reduction[1][i] > max_reduction)
+        if (s >= (double)current_discount.full_reduction[0][i] && current_discount.full_reduction[1][i] > max_reduction)
         {
             max_reduction = current_discount.full_reduction[1][i];
             selected_level = i;
@@ -1083,7 +1097,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 
         if (c->VIP_level >= (int)current_discount.VIP_discount[0][i])
         {
-            double current_price = s * current_discount.VIP_discount[1][i] / 100.0;
+            double current_price = s * (double)current_discount.VIP_discount[1][i] / 100.0;
             if (current_price < min_vip_price)
             {
                 min_vip_price = current_price;
@@ -1111,6 +1125,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         total_discount[2] = total_discount[0];
         printf("已使用满减优惠 : %.2lf\n", total_discount[0]);
     }
+    printf("\n");  // 添加优惠信息后的换行
     printf("目前您有%d积分\n", c->VIP_point);
     printf("目前每100积分可抵现 : %.2lf\n", current_discount.point_discount);
     printf("是否使用积分抵现？(0:否 1:是) : ");
@@ -1132,10 +1147,14 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
     scanf("%d", &pay_method);
     if (pay_method == a)
     {
-        // 增加满赠逻辑
+        // 满赠逻辑
         for (int i = 0; i < 101; i++)
         {
-            if ((total_discount[2] >= current_discount.full_gift[0][i] && total_discount[2] < current_discount.full_gift[0][i + 1]) || current_discount.full_gift[0][i + 1] == -1)
+            // 如果没有下一层级，或者价格在当前层级和下一层级之间
+            if (current_discount.full_gift[0][i] != -1 && 
+                total_discount[2] >= (double)current_discount.full_gift[0][i] && 
+                (current_discount.full_gift[0][i + 1] == -1 || 
+                 total_discount[2] < (double)current_discount.full_gift[0][i + 1]))
             {
                 LNode_goods *l = L->next;
                 while (l != NULL)
@@ -1164,7 +1183,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
             c->VIP_level++;
 
         // 增加VIP积分
-        c->VIP_point = c->VIP_point + total_discount[2];
+        c->VIP_point = c->VIP_point + (int)total_discount[2];
 
         // 更新商品销售和库存并释放购物车内存
         LNode_customer_cart *current = P->next;
@@ -1209,6 +1228,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 // 显示当前优惠方案
 status display_promotion_rules()
 {
+    system("cls");
     printHeader("当前优惠方案");
 
     // 1. 满减优惠
@@ -1268,6 +1288,7 @@ status display_promotion_rules()
     printf("\n");
     for (int i = 0; i < WINDOW_WIDTH; i++)
         printf("=");
+    printf("\n");
     system("pause");
     return OK;
 }
@@ -1276,6 +1297,8 @@ status display_promotion_rules()
 status modify_promotion_rule()
 {
     int i;
+    system("cls");
+    display_promotion_rules();
     printHeader("修改优惠规则");
     printf("\n");
     printf("1.满减\n");
@@ -1327,13 +1350,16 @@ status modify_promotion_rule()
     {
         current_discount.full_gift[0][0] = 0;
         current_discount.full_gift[1][0] = 0;
-        printf("请输入满赠金额%d层金额(输入-1结束) : ", i + 1);
-        scanf("%lf", &current_discount.full_gift[0][i]);
-        if (current_discount.full_gift[0][i] == -1)
-            break;
-        printf("\n");
-        printf("请输入满赠金额%d对应的赠品ID : ", current_discount.full_gift[0][i]);
-        scanf("%d", &current_discount.full_gift[1][i]);
+        for (i = 0; i < 100; i++)
+        {
+            printf("请输入满赠金额%d层金额(输入-1结束) : ", i + 1);
+            scanf("%d", &current_discount.full_gift[0][i]);
+            if (current_discount.full_gift[0][i] == -1)
+                break;
+            printf("\n");
+            printf("请输入满赠金额 %d 对应的赠品ID : ", current_discount.full_gift[0][i]);
+            scanf("%d", &current_discount.full_gift[1][i]);
+        }
         printf("修改成功\n");
         system("pause");
         return OK;
@@ -1347,7 +1373,6 @@ status modify_promotion_rule()
         return OK;
     }
     case 0:
-        system("pause");
         return OK;
     default:
         printf("输入错误,请重试\n");
@@ -1401,7 +1426,7 @@ status view_supply_info(LinkList_goods &L)
         }
     }
     printf("供应商名称 : %s 价格 : %lf\n是最优的可以从其中进货\n", name, price);
-    printf("返回管理员清单");
+    printf("返回管理员清单\n");
     system("pause");
     return OK;
 }
