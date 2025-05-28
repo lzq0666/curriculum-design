@@ -574,7 +574,7 @@ status search_goods(char *s, LinkList_goods &L)
         for (int i = 0; i < WINDOW_WIDTH; i++)
             printf("=");
         printf("\033[0m\n");
-        printf("\n");  // 添加结果后的换行
+        printf("\n"); // 添加结果后的换行
         system("pause");
         return OK;
     }
@@ -996,7 +996,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
 {
     double s = 0.0;
     printHeader("结算界面");
-    printf("\n");  // 添加标题后的换行
+    printf("\n"); // 添加标题后的换行
 
     LNode_customer_cart *p = P->next;
     if (p == NULL) // 如果购物车为空
@@ -1125,7 +1125,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         total_discount[2] = total_discount[0];
         printf("已使用满减优惠 : %.2lf\n", total_discount[0]);
     }
-    printf("\n");  // 添加优惠信息后的换行
+    printf("\n"); // 添加优惠信息后的换行
     printf("目前您有%d积分\n", c->VIP_point);
     printf("目前每100积分可抵现 : %.2lf\n", current_discount.point_discount);
     printf("是否使用积分抵现？(0:否 1:是) : ");
@@ -1151,9 +1151,9 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         for (int i = 0; i < 101; i++)
         {
             // 如果没有下一层级，或者价格在当前层级和下一层级之间
-            if (current_discount.full_gift[0][i] != -1 && 
-                total_discount[2] >= (double)current_discount.full_gift[0][i] && 
-                (current_discount.full_gift[0][i + 1] == -1 || 
+            if (current_discount.full_gift[0][i] != -1 &&
+                total_discount[2] >= (double)current_discount.full_gift[0][i] &&
+                (current_discount.full_gift[0][i + 1] == -1 ||
                  total_discount[2] < (double)current_discount.full_gift[0][i + 1]))
             {
                 LNode_goods *l = L->next;
@@ -1224,6 +1224,7 @@ status settlement(LinkList_customer_cart &P, customer *c, LinkList_goods &L)
         return ERROR;
     }
 }
+
 
 // 显示当前优惠方案
 status display_promotion_rules()
