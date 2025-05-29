@@ -118,7 +118,6 @@ status add_customer_cart(LinkList_customer_cart &P, LinkList_goods &L);
 status modify_cart_item(LinkList_customer_cart &L_customer_cart);
 status delete_cart_item(LinkList_customer_cart &L_customer_cart);
 status ListTraverse_customer_cart(LinkList_customer_cart L);
-status settlement(LinkList_customer_cart &P, customer *cust, LinkList_goods &L);
 
 // 优惠相关
 status display_promotion_rules();
@@ -128,6 +127,7 @@ status modify_promotion_rule();
 int admin_menu();
 void customer_menu(customer *customer);
 status admin_login();
+status settlement(LinkList_customer_cart &P, customer *cust, LinkList_goods &L);
 
 // 文件操作
 status save_data();
@@ -1807,7 +1807,7 @@ void customer_menu(customer *customer)
         printHeader("欢迎光临无人超市");
         printf("%s %d级 积分 : %d\n", customer->name, customer->VIP_level, customer->VIP_point);
         printf("\033[92m"); // 浅绿色
-        printf("tips : 本店有会员折扣、满减折扣，满一定金额更有礼品赠送，快滴来探索啦！！！\n");
+        printf("tips : 本店有会员折扣、满减折扣，满一定金额更有礼品赠送，快来探索啦！！！\n");
         printf("       每消费一元得1积分，可抵商品金额。");
         printf("\033[91m"); // 红色
         printf("一但退出本系统购物车就会清空哦！！\n");
