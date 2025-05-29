@@ -524,7 +524,7 @@ status calculate_sale_money(LinkList_goods &L)
     {
         printf("%-46s", p->goods.name);
         printf("销售量 : %d\n", p->goods.sale_count);
-        s += p->goods.sale_count * p->goods.price;
+        s = s + (p->goods.sale_count * p->goods.price);
         p = p->next;
     }
     printf("优惠总价格 : %.2lf\n", money);
@@ -920,17 +920,6 @@ status modify_cart_item(LinkList_customer_cart &L_customer_cart)
             break;
         }
 
-        do
-        {
-            printf(">");
-            printf("请输入新数量 : \n");
-            scanf("%d", &num);
-            if (num <= 0)
-            {
-                printf("数量必须大于0,请重新输入\n");
-            }
-        } while (num <= 0);
-
         LNode_customer_cart *cart = L_customer_cart->next;
         while (cart != NULL && cart->goods.id != id)
         {
@@ -942,6 +931,17 @@ status modify_cart_item(LinkList_customer_cart &L_customer_cart)
             printf("购物车中没有ID为%d的商品\n", id);
             continue;
         }
+        
+        do
+        {
+            printf(">");
+            printf("请输入新数量 : \n");
+            scanf("%d", &num);
+            if (num <= 0)
+            {
+                printf("数量必须大于0,请重新输入\n");
+            }
+        } while (num <= 0);
 
         if (num <= 0)
         {
